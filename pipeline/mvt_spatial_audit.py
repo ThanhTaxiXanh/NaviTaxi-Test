@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 from dataclasses import dataclass
+import hashlib
 import json
 from pathlib import Path
 import struct
@@ -251,6 +252,7 @@ def reference_gate(path: Path) -> dict:
 def scan_spatial_archive(
     path: Path, source_layer: str, max_tiles: int = 32,
     reference: Path | None = None,
+    start_entry: int | None = None, entry_count: int | None = None,
 ) -> dict:
     indexed = audit_directory_tree(path)
     reference_file = reference or (
@@ -271,7 +273,22 @@ def scan_spatial_archive(
                 entries.extend(decode_directory(stream.read(item.length), header[97]))
         if len(entries) != indexed.tile_entries:
             raise MVTAuditError("PMTiles directory mismatch")
-        positions = sample_positions(len(entries), max_tiles)
+        if start_entry is not None or entry_count is not None:
+            if max_tiles != 0:
+                raise ValueError("Range scans require --max-tiles 0")
+            start = 0 if start_entry is None else start_entry
+            count = len(entries) - start if entry_count is None else entry_count
+            if start < 0 or start >= len(entries) or count <= 0 or start + count > len(entries):
+                raise ValueError("Contiguous entry range is outside the PMTiles index")
+            positions = range(start, start + count)
+            selection = {
+                "mode": "contiguous_range",
+                "start_entry": start,
+                "end_entry_exclusive": start + count,
+            }
+        else:
+            positions = sample_positions(len(entries), max_tiles)
+            selection = {"mode": "spread_sample", "max_tiles": max_tiles}
         geometries = Counter()
         bbox = None
         name_fields = vertices = paths = 0
@@ -296,12 +313,21 @@ def scan_spatial_archive(
             if summary["feature_bbox_wgs84"]:
                 bbox = _merge_boxes(bbox, summary["feature_bbox_wgs84"])
             candidates.extend(summary["review_candidates"][: max(0, 20 - len(candidates))])
+    digest = hashlib.sha256()
+    with path.open("rb") as archive_stream:
+        for block in iter(lambda: archive_stream.read(1024 * 1024), b""):
+            digest.update(block)
     return {
+        "scanner_schema_version": 1,
         "archive": path.name,
+        "archive_sha256": digest.hexdigest(),
+        "archive_size_bytes": path.stat().st_size,
         "source_layer": source_layer,
+        "selection": selection,
         "indexed_tile_entries": indexed.tile_entries,
         "addressed_tiles_in_index": indexed.addressed_tiles,
         "sampled_payload_entries": len(positions),
+        "examined_payload_entries": len(positions),
         "sampling": len(positions) < len(entries),
         "geometry_counts": dict(geometries),
         "vertices_projected": vertices,
@@ -313,8 +339,12 @@ def scan_spatial_archive(
         "reference_gate": gate,
         "p0_status": "BLOCKED",
         "status": (
-            "SAMPLED_GEOMETRY_DIAGNOSTICS_NOT_P0" if len(positions) < len(entries)
-            else "ALL_INDEX_ENTRIES_GEOMETRY_DIAGNOSTICS_NOT_P0"
+            "ALL_INDEX_ENTRIES_GEOMETRY_DIAGNOSTICS_NOT_P0"
+            if len(positions) == len(entries) else (
+                "RANGE_GEOMETRY_DIAGNOSTICS_NOT_P0"
+                if selection["mode"] == "contiguous_range"
+                else "SAMPLED_GEOMETRY_DIAGNOSTICS_NOT_P0"
+            )
         ),
     }
 
@@ -324,13 +354,15 @@ def main() -> int:
     parser.add_argument("archive", type=Path)
     parser.add_argument("--layer", required=True)
     parser.add_argument("--max-tiles", type=int, default=32)
+    parser.add_argument("--start-entry", type=int)
+    parser.add_argument("--entry-count", type=int)
     parser.add_argument("--reference", type=Path)
     parser.add_argument("--report", type=Path)
     options = parser.parse_args()
     try:
         report = scan_spatial_archive(
             options.archive, options.layer, options.max_tiles,
-            options.reference,
+            options.reference, options.start_entry, options.entry_count,
         )
         code = 0
     except (OSError, ValueError, DirectoryAuditError, MVTAuditError) as exc:

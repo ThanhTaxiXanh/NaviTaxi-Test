@@ -1,5 +1,6 @@
 """Geometry-to-WGS84 diagnostics: synthetic tests with no sovereignty geometry."""
 import json
+import hashlib
 from pathlib import Path
 import struct
 import tempfile
@@ -161,6 +162,22 @@ class MVTSpatialTests(unittest.TestCase):
             self.assertEqual(result["p0_status"], "BLOCKED")
             self.assertEqual(result["reference_gate"]["status"], "REFERENCE_PENDING")
             self.assertEqual(result["decoded_feature_envelope_wgs84_unwrapped"], [0, 0, 0, 0])
+            self.assertEqual(result["archive_sha256"], hashlib.sha256(archive.read_bytes()).hexdigest())
+            self.assertEqual(result["scanner_schema_version"], 1)
+            chunk = scan_spatial_archive(
+                archive, "roads", max_tiles=0, reference=p,
+                start_entry=0, entry_count=1,
+            )
+            self.assertEqual(chunk["selection"], {
+                "mode": "contiguous_range", "start_entry": 0, "end_entry_exclusive": 1,
+            })
+            self.assertEqual(chunk["geometry_counts"], result["geometry_counts"])
+            with self.assertRaises(ValueError):
+                scan_spatial_archive(archive, "roads", max_tiles=0, reference=p,
+                                     start_entry=1, entry_count=1)
+            with self.assertRaises(ValueError):
+                scan_spatial_archive(archive, "roads", max_tiles=3, reference=p,
+                                     start_entry=0, entry_count=1)
 
 
 if __name__ == "__main__":
