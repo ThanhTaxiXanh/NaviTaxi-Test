@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "status": "pending",
+  "source_documents": [],
+  "features": [],
+  "note": "Populate only from vetted official references. No synthetic island geometry."
+}
