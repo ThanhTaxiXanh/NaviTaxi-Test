@@ -14,6 +14,7 @@ import re
 import struct
 import zlib
 
+from pipeline.tile_coordinates import tileid_to_zxy, tile_bounds_wgs84
 from pipeline.pmtiles_directory_audit import (
     audit_directory_tree, decode_directory, DirectoryAuditError,
 )
@@ -267,10 +268,16 @@ def audit_archive(path: Path, source_layer: str, max_tiles: int = 12):
             raise MVTAuditError("PMTiles index changed during audit")
         positions = sample_positions(len(entries), max_tiles)
         counts = Counter()
+        zooms = Counter()
+        high_zoom_boxes = []
         features = coordinates = names = 0
         reviews = []
         for position in positions:
             entry = entries[position]
+            zoom, _, _ = tileid_to_zxy(entry.tile_id)
+            zooms[str(zoom)] += 1
+            if zoom >= 8:
+                high_zoom_boxes.append(tile_bounds_wgs84(entry.tile_id))
             stream.seek(tile_offset + entry.offset)
             blob = stream.read(entry.length)
             raw = decompress_mvt(blob, header[98])
@@ -297,6 +304,15 @@ def audit_archive(path: Path, source_layer: str, max_tiles: int = 12):
         "named_properties_checked": names,
         "layer_feature_counts": dict(counts),
         "suspect_label_examples": reviews,
+        "sample_zoom_distribution": dict(zooms),
+        "high_zoom_sampled_tile_footprint_wgs84": (
+            [
+                min(b[0] for b in high_zoom_boxes),
+                min(b[1] for b in high_zoom_boxes),
+                max(b[2] for b in high_zoom_boxes),
+                max(b[3] for b in high_zoom_boxes),
+            ] if high_zoom_boxes else None
+        ),
         "status": "SAMPLE_OK_NOT_P0" if sampled else "FULL_MVT_STRUCTURAL_SCAN_NOT_P0",
     }
 

@@ -51,3 +51,5 @@ intersection and forbidden-claim spatial review; validate online/offline
 source parity and render screenshots across cameras, zooms and themes on
 real Android devices. Keep release blocked until the independent P0 engine
 and all required evidence are complete.
+
+The report includes a zoom distribution and optional geographic envelope of **sampled tile footprints** at zoom ≥8. These are approximate tile coverage areas, not decoded feature WGS84 geometry and not legal maritime boundaries.
