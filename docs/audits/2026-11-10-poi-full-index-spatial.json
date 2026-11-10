@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "status": "COMPLETE_INDEX_GEOMETRY_DIAGNOSTICS_NOT_P0",
+  "p0_status": "BLOCKED",
+  "archive": "hotosm_vnm_points_of_interest_osm.pmtiles",
+  "archive_sha256": "dda5a9de8412e8d6bdc73ae62d4fa2c3f8ef017bcbc0c833bc2a9e441be87763",
+  "source_layer": "points_of_interest",
+  "indexed_tile_entries": 4209,
+  "addressed_tiles_in_index": 4209,
+  "examined_payload_entries": 4209,
+  "complete_index_entry_coverage": true,
+  "missing_entry_ranges": [],
+  "geometry_counts": {
+    "point": 164751,
+    "line": 12964,
+    "polygon": 179913
+  },
+  "vertices_projected": 1120681,
+  "paths_checked": 358969,
+  "name_fields_checked": 1643167,
+  "decoded_feature_envelope_wgs84_unwrapped": [
+    102.16476202011108,
+    8.429519643408225,
+    109.45816040039062,
+    23.38340579579054
+  ],
+  "zoom_distribution": {
+    "0": 1,
+    "1": 1,
+    "2": 1,
+    "3": 1,
+    "4": 2,
+    "5": 3,
+    "6": 8,
+    "7": 16,
+    "8": 37,
+    "9": 108,
+    "10": 322,
+    "11": 992,
+    "12": 2717
+  },
+  "review_candidates": [
+    {
+      "tile_id": "19170358",
+      "field": "name_en",
+      "value": "View of the South China Sea",
+      "feature_bbox_wgs84": [
+        106.48268938064575,
+        9.550159456613963,
+        106.48268938064575,
+        9.550159456613963
+      ]
+    },
+    {
+      "tile_id": "19170358",
+      "field": "name_latin",
+      "value": "View of the South China Sea",
+      "feature_bbox_wgs84": [
+        106.48268938064575,
+        9.550159456613963,
+        106.48268938064575,
+        9.550159456613963
+      ]
+    }
+  ],
+  "reference_gate": {
+    "status": "REFERENCE_PENDING",
+    "review_overlay": "NOT_RUN",
+    "reason": "Official geographic references are not approved"
+  },
+  "chunk_report_checksums": [
+    {
+      "filename": "poi_range_0_2104.json",
+      "sha256": "e8442cc2c64227f3ab9da8e0d3041dc2dd742a25628cfac6bb63913126c0b8ca"
+    },
+    {
+      "filename": "poi_range_2104_4209.json",
+      "sha256": "d3089a622bb3c3216767a59921d78c48ed5019a5044619fc30ed8a8ef4818254"
+    }
+  ]
+}

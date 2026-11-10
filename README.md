@@ -10,7 +10,7 @@ Android-first Flutter + Kotlin + MapLibre foundation for a Vietnamese online/off
 - `android/`: Kotlin MethodChannel, SAF archive import and Android project configuration
 - `assets/styles/`: candidate MapLibre style, currently source-free
 - `assets/manifests/`: release policy flags
-- `pipeline/`: PMTiles intake and P0 validation tooling
+- `pipeline/`: PMTiles intake, WGS84 feature review, chunk merger and P0 validation tooling
 - `tests/sovereignty/`: independent Python validation unit tests
 - `test/`: Dart policy tests
 - `docs/`: architecture, source provenance and Android setup

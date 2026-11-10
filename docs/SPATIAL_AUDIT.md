@@ -75,3 +75,47 @@ evidence and Android/airplane-mode test cases have been independently vetted.
 ### Performance note
 
 For bounding-box-only diagnostics, the inverse Web Mercator function is monotone. The scanner validates every decoded vertex but projects only minimum/maximum tile-local coordinates per feature to WGS84. A 128-entry Buildings sample produced an identical JSON report before and after this optimization. It does not reconstruct the full geodesic feature geometry or test polygon topology.
+
+## Resumable, hash-bound contiguous chunk scans
+
+Large archives can be scanned one consecutive index range at a time. This
+allows interruption without losing earlier diagnostic results:
+
+```bash
+python3 -m pipeline.mvt_spatial_audit /path/to/poi.pmtiles --layer points_of_interest --max-tiles 0 --start-entry 0 --entry-count 2104 --report /tmp/poi-000.json
+python3 -m pipeline.mvt_spatial_audit /path/to/poi.pmtiles --layer points_of_interest --max-tiles 0 --start-entry 2104 --entry-count 2105 --report /tmp/poi-001.json
+python3 -m pipeline.spatial_report_merge /tmp/poi-000.json /tmp/poi-001.json --output /tmp/poi-merged.json
+```
+
+Use the **actual filename** from the intake catalog. The example above uses
+a placeholder short path; the merge requires SHA-256, archive byte size and
+source-layer to match `assets/manifests/ingestion_inventory.json`.
+
+Chunk reports store their `[start_entry, end_entry_exclusive)` range and full
+archive SHA-256. Merger refuses overlapping ranges, mismatched digests,
+unrecognized source archives and gaps in the index. With `--allow-partial`,
+it emits the explicit missing index ranges instead of misrepresenting
+coverage. All merged results still have `p0_status=BLOCKED`.
+
+### Full POI scan performed locally
+
+The entire 4,209-entry POI file was scanned with the geometry pipeline and
+independently re-scanned in two contiguous chunks (2,104 + 2,105 entries).
+The two modes agreed exactly on feature counts, WGS84 bounds, vertex totals,
+name-field totals and all collected review candidates.
+
+- Total features: **357,628** (164,751 points; 12,964 lines; 179,913 polygons)
+- Decoded geometry vertices: **1,120,681**; reviewed name fields: **1,643,167**
+- WGS84 union envelope: `[102.1647620, 8.4295196, 109.4581604, 23.3834058]`
+- Two flagged fields, **one POI**, name_en and name_latin:
+  `View of the South China Sea`
+
+This text is an English name for a viewpoint POI within the input data.
+It is **not evidence that MapLibre renders an illegal claim line or a sea label**.
+Alternative English labels may remain in query data; release presentation
+must still follow verified Vietnamese-language style rules.
+
+The machine-readable results are in
+`docs/audits/2026-11-10-poi-full-index-spatial.json`. This documents **full
+index-entry coverage of POI**, not full sovereign/legal GIS verification.
+All associated source geometry remains quarantined.
