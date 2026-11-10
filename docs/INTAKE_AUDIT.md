@@ -11,3 +11,16 @@ python3 pipeline/vietnam_sovereignty_validator.py --mode audit --repo-root . --d
 This reads each PMTiles v3 header, JSON metadata, source-layer names, file byte length and complete SHA-256 digest. `INTAKE_OK_NOT_P0` means the files match the inventory **only**.
 
 `--mode release` independently checks approval, authoritative geometry, style, evidence hashes and screenshots. In the current phase it deliberately returns `FULL_P0_ENGINE_INCOMPLETE` because a full MVT semantic/spatial decoder and Android visual comparison have not yet been implemented. **Do not bypass the blocker by editing the manifest.**
+
+## PMTiles directory tree scan (new)
+
+For each user-supplied archive, verify the full PMTiles v3 root/leaf index,
+monotonic tile IDs, tile-data offsets and declared tile counts:
+
+```bash
+python3 pipeline/pmtiles_directory_audit.py /path/to/pmtiles/*.pmtiles
+```
+
+The output `INTAKE_INDEX_OK_NOT_P0` means the internal archive directory
+structure is consistent. It does not scan MVT label/geometry payloads and
+does **not** approve sovereign territorial depiction or offline activation.
