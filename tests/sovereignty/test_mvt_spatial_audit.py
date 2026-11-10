@@ -19,7 +19,7 @@ def varint(value):
     while value >= 128:
         out.append((value & 127) | 128)
         value >>= 7
-        out.append(value)
+    out.append(value)
     return bytes(out)
 
 

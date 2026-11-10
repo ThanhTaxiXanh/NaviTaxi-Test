@@ -28,3 +28,7 @@ Do not add the PMTiles archives to Git; handle via versioned artifact storage af
 6. Offline manifest, update/rollback and post-install checksum audit.
 
 Release gate currently fails by design.
+
+## Decoded MVT geometry and geographic envelopes
+
+A deterministic local **128-directory-entry sample per archive** has been decoded to individual WGS84 feature envelopes. See [spatial scan procedure](SPATIAL_AUDIT.md) and the [machine-readable quarantine report](audits/2026-11-10-feature-spatial-sample.json). This does not provide approved sea/island boundaries or validate legal geometry. P0 remains blocked.

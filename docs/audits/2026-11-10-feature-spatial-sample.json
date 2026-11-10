@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "run_date_utc": "2026-11-10",
+  "status": "INTAKE_SAMPLED_GEOMETRY_DIAGNOSTICS_NOT_P0",
+  "p0_pass": false,
+  "methodology": "128 evenly distributed PMTiles directory entries per archive; entire PMTiles directory checked per archive; decoded MVT geometry and name fields converted to feature WGS84 envelopes",
+  "limitations": [
+    "Sampling does not cover all MVT payload entries or all addressed tiles",
+    "Source provenance, license and official reference geometry remain unverified",
+    "Reference spatial overlay, Android visual regression and offshore islands/sea coverage not tested",
+    "WGS84 feature envelope is not a border, sea polygon or legal claim"
+  ],
+  "reference_gate": "REFERENCE_PENDING",
+  "archives": [
+    {
+      "filename": "hotosm_vnm_roads_osm.pmtiles",
+      "sha256": "ca575f95bc708ec1fb39e0c3b3f5ee4a3f1596e75e5a0b1f6e50f85e8a28bedd",
+      "source_layer": "roads",
+      "total_index_entries": 21055,
+      "sampled_entries": 128,
+      "geometry_counts": {
+        "point": 306,
+        "line": 109080,
+        "polygon": 45
+      },
+      "vertices_projected": 468163,
+      "name_fields_checked": 356524,
+      "envelope_wgs84_unwrapped": [
+        102.12890625,
+        8.581021215641846,
+        109.423828125,
+        23.402764905407942
+      ],
+      "review_candidate_examples": 0
+    },
+    {
+      "filename": "hotosm_vnm_buildings_osm.pmtiles",
+      "sha256": "8c6f129a2bf2237215d90be72a52475cb6f0f528ac41dfabc5434d832ca37b6f",
+      "source_layer": "buildings",
+      "total_index_entries": 18890,
+      "sampled_entries": 128,
+      "geometry_counts": {
+        "point": 16,
+        "line": 0,
+        "polygon": 19943
+      },
+      "vertices_projected": 89060,
+      "name_fields_checked": 61938,
+      "envelope_wgs84_unwrapped": [
+        102.19708800315857,
+        9.558845642596545,
+        109.25803542137146,
+        22.94167703898699
+      ],
+      "review_candidate_examples": 0
+    },
+    {
+      "filename": "hotosm_vnm_points_of_interest_osm.pmtiles",
+      "sha256": "dda5a9de8412e8d6bdc73ae62d4fa2c3f8ef017bcbc0c833bc2a9e441be87763",
+      "source_layer": "points_of_interest",
+      "total_index_entries": 4209,
+      "sampled_entries": 128,
+      "geometry_counts": {
+        "point": 3379,
+        "line": 263,
+        "polygon": 2806
+      },
+      "vertices_projected": 19421,
+      "name_fields_checked": 29271,
+      "envelope_wgs84_unwrapped": [
+        102.25147247314453,
+        8.94470291619031,
+        109.43442821502686,
+        23.23714644316673
+      ],
+      "review_candidate_examples": 0
+    }
+  ]
+}
