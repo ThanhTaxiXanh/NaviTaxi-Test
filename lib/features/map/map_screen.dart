@@ -5,7 +5,6 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 import '../../core/map_release.dart';
 import '../../core/style_policy.dart';
 import '../offline/offline_packages_screen.dart';
-import '../../platform/android_storage_bridge.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -29,7 +28,6 @@ class _MapScreenState extends State<MapScreen> {
 
   late final Future<_BootStyle> _bootStyle = _loadBootStyle();
   MapLibreMapController? _controller;
-  final _storage = const AndroidStorageBridge();
 
   Future<_BootStyle> _loadBootStyle() async {
     try {
@@ -54,24 +52,6 @@ class _MapScreenState extends State<MapScreen> {
         _fallbackStyle,
         false,
         'Không thể xác minh manifest/style. Đã chặn dữ liệu bản đồ.',
-      );
-    }
-  }
-
-  Future<void> _showStorage() async {
-    try {
-      final path = await _storage.getOfflineDirectory();
-      final bytes = await _storage.getAvailableBytes();
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Thư mục offline: $path\\nBộ nhớ trống: ${bytes ~/ (1024 * 1024)} MiB'),
-        ),
-      );
-    } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Chưa kết nối được dịch vụ lưu trữ Android.')),
       );
     }
   }

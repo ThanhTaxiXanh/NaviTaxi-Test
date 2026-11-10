@@ -112,11 +112,40 @@ class _OfflinePackagesScreenState extends State<OfflinePackagesScreen> {
     });
   }
 
+  Future<void> _showStorageInfo() async {
+    try {
+      final path = await widget.storage.getOfflineDirectory();
+      final bytes = await widget.storage.getAvailableBytes();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Thư mục cách ly: $path\\nCòn trống: ${bytes ~/ (1024 * 1024)} MiB',
+          ),
+        ),
+      );
+    } on PlatformException catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.message ?? error.code)),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final installed = {for (final file in _installed) file.filename: file};
     return Scaffold(
-      appBar: AppBar(title: const Text('Dữ liệu bản đồ offline')),
+      appBar: AppBar(
+        title: const Text('Dữ liệu bản đồ offline'),
+        actions: [
+          IconButton(
+            tooltip: 'Bộ nhớ cách ly',
+            onPressed: _showStorageInfo,
+            icon: const Icon(Icons.info_outline),
+          ),
+        ],
+      ),
       body: FutureBuilder<List<OfflineArchive>>(
         future: _catalog,
         builder: (context, snapshot) {
