@@ -7,6 +7,7 @@
    ```bash
    flutter doctor -v
    flutter create --platforms=android --project-name=navi_taxi_test --org=vn.navitaxi .
+   rm -f test/widget_test.dart  # remove upstream MyApp template (not our app)
    flutter pub get
    flutter analyze
    flutter test

@@ -64,8 +64,7 @@ class _MapScreenState extends State<MapScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Thư mục offline: ' + path +
-              '\nBộ nhớ trống: ' + (bytes ~/ (1024 * 1024)).toString() + ' MiB'),
+          content: Text('Thư mục offline: $path\\nBộ nhớ trống: ${bytes ~/ (1024 * 1024)} MiB'),
         ),
       );
     } catch (_) {
@@ -122,8 +121,7 @@ class _MapScreenState extends State<MapScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(12),
                             child: Text(
-                              'NaviTaxi Việt Nam  •  ' +
-                                  (boot.dataApproved ? 'Bản đồ được duyệt' : 'P0: CHƯA ĐẠT'),
+                              'NaviTaxi Việt Nam  •  ${boot.dataApproved ? 'Bản đồ được duyệt' : 'P0: CHƯA ĐẠT'}',
                               style: const TextStyle(fontWeight: FontWeight.w600),
                             ),
                           ),

@@ -35,6 +35,8 @@ jobs:
           cache: true
       - name: Generate missing Flutter platform support files
         run: flutter create --platforms=android --project-name=navi_taxi_test --org=vn.navitaxi .
+      - name: Remove Flutter's generated template test
+        run: rm -f test/widget_test.dart
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
