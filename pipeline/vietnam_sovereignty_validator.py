@@ -75,7 +75,7 @@ def read_pmtiles_header_and_metadata(path: Path) -> dict[str, Any]:
     """
     with path.open("rb") as stream:
         header = stream.read(127)
-        if len(header) != 127 or header[:8] != b"PMTiles\\x03":
+        if len(header) != 127 or header[:8] != b"PMTiles\x03":
             raise PMTilesError("Not a PMTiles v3 archive")
         metadata_offset, metadata_length = struct.unpack_from("<QQ", header, 24)
         file_size = path.stat().st_size

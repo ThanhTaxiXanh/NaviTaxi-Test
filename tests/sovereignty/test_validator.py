@@ -22,7 +22,7 @@ def make_fixture(path: Path, layers=("roads",)) -> tuple[int, str]:
         "vector_layers": [{"id": name, "fields": {"name_vi": "String"}} for name in layers]
     }).encode("utf-8"))
     header = bytearray(127)
-    header[:8] = b"PMTiles\\x03"
+    header[:8] = b"PMTiles\x03"
     struct.pack_into("<QQ", header, 24, 127, len(payload))
     header[97] = 2
     header[99] = 1
