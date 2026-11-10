@@ -4,6 +4,7 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 
 import '../../core/map_release.dart';
 import '../../core/style_policy.dart';
+import '../offline/offline_packages_screen.dart';
 import '../../platform/android_storage_bridge.dart';
 
 class MapScreen extends StatefulWidget {
@@ -129,7 +130,13 @@ class _MapScreenState extends State<MapScreen> {
                       ),
                       IconButton.filledTonal(
                         tooltip: 'Thông tin bộ nhớ offline',
-                        onPressed: _showStorage,
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) => const OfflinePackagesScreen(),
+                            ),
+                          );
+                        },
                         icon: const Icon(Icons.storage_outlined),
                       ),
                     ],

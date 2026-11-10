@@ -6,8 +6,8 @@ Android-first Flutter + Kotlin + MapLibre foundation for a Vietnamese online/off
 
 ## Repository structure
 
-- `lib/`: Flutter presentation and policy-gated map bootstrap
-- `android/`: Kotlin MethodChannel and Android project configuration
+- `lib/`: Flutter presentation, offline quarantine UI and policy-gated map bootstrap
+- `android/`: Kotlin MethodChannel, SAF archive import and Android project configuration
 - `assets/styles/`: candidate MapLibre style, currently source-free
 - `assets/manifests/`: release policy flags
 - `pipeline/`: PMTiles intake and P0 validation tooling
@@ -28,4 +28,4 @@ python3 pipeline/vietnam_sovereignty_validator.py --repo-root .
 
 The last command **must fail** until all required P0 evidence, source provenance and Android screenshots have been approved. A running shell app is **not** completion of P1/P2 or P0.
 
-See [architecture](docs/ARCHITECTURE.md), [data provenance](docs/DATA_PROVENANCE.md), [Android setup](docs/BUILD_ANDROID.md) and the [original Master Prompt](docs/MASTER_PROMPT.txt).
+See [offline intake](docs/OFFLINE_INTAKE.md), [architecture](docs/ARCHITECTURE.md), [data provenance](docs/DATA_PROVENANCE.md), [Android setup](docs/BUILD_ANDROID.md) and the [original Master Prompt](docs/MASTER_PROMPT.txt).

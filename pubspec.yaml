@@ -21,3 +21,4 @@ flutter:
   assets:
     - assets/styles/vietnam_sovereign_style.json
     - assets/manifests/map_release.json
+    - assets/manifests/ingestion_inventory.json
