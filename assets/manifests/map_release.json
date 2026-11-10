@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "status": "blocked",
+  "p0_pass": false,
+  "style_asset": "assets/styles/vietnam_sovereign_style.json",
+  "evidence_sha256": "",
+  "reason": "Missing verified island/sea GIS, authoritative references, tile scans, Android visual evidence and offline airplane-mode evidence."
+}

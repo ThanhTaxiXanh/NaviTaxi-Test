@@ -1,0 +1,31 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+.pub/
+.pub-cache/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+*.iml
+.idea/
+.vscode/
+# Android (keep generated wrapper only after verified)
+android/local.properties
+android/key.properties
+android/.gradle/
+android/captures/
+*.jks
+*.keystore
+# Sensitive local datasets (never commit unverified map packages)
+*.pmtiles
+*.mbtiles
+*.pbf
+*.fgb
+*.osm
+*.osm.pbf
+*.apk
+*.aab
+__pycache__/
+*.py[cod]
+.DS_Store

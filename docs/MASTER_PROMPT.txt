@@ -1,0 +1,721 @@
+Xây dựng nền tảng bản đồ Việt Nam Online/Offline bằng Flutter + Kotlin
+
+Vai trò của AI: Principal Software Architect, Senior Flutter Engineer, Senior Android Kotlin Engineer, GIS Engineer, Cartography Specialist, Vector Tile Engineer, Offline Mapping Engineer, QA Automation Engineer.
+
+Mục tiêu: Xây dựng ứng dụng bản đồ Việt Nam chuyên nghiệp, hoạt động trực tuyến và ngoại tuyến, có khả năng kiểm soát hoàn toàn dữ liệu bản đồ, quy tắc hiển thị lãnh thổ, tên địa danh, hệ thống tile, bản đồ nền và các lớp GIS.
+
+Nền tảng ưu tiên: Android.
+
+Ngôn ngữ lập trình: Dart (Flutter) và Kotlin (Android Native).
+
+Nền tảng giai đoạn sau: iOS, chỉ triển khai sau khi Android đã vượt qua toàn bộ kiểm thử và được chấp thuận.
+
+⸻
+
+PHẦN 1. NGUYÊN TẮC BẮT BUỘC — P0
+
+1.1. Quy tắc hiển thị chủ quyền Việt Nam
+
+Ứng dụng phải tuân thủ cấu hình hiển thị lãnh thổ Việt Nam và sử dụng các nguồn bản đồ chính thống, có thẩm quyền của Việt Nam để đối chiếu.
+
+BẮT BUỘC:
+
+1. Hiển thị đầy đủ lãnh thổ đất liền Việt Nam.
+2. Hiển thị các đảo, quần đảo và vùng biển liên quan.
+3. Quần đảo Hoàng Sa phải được thể hiện với tên tiếng Việt và thuộc Việt Nam theo quy tắc trình bày của dự án.
+4. Quần đảo Trường Sa phải được thể hiện với tên tiếng Việt và thuộc Việt Nam theo quy tắc trình bày của dự án.
+5. Vùng biển phải được ghi là BIỂN ĐÔNG.
+6. Không hiển thị đường chín đoạn, đường lưỡi bò hoặc các đường yêu sách tương tự của nước khác trên khu vực Biển Đông.
+7. Không hiển thị tên đơn vị hành chính nước ngoài dưới dạng cơ quan quản lý Hoàng Sa hoặc Trường Sa.
+8. Không dùng các lớp ranh giới hoặc nhãn mặc định của nhà cung cấp bản đồ nếu chúng trái với cấu hình hiển thị chủ quyền của dự án.
+9. Không tự suy diễn đường phân định biển, vùng đặc quyền kinh tế hoặc ranh giới pháp lý khi chưa có dữ liệu được kiểm chứng.
+10. Không xóa bỏ hay thay đổi các đường biên giới hợp lệ tại những khu vực không liên quan đến yêu sách đang xử lý.
+
+Quy tắc nhãn bắt buộc:
+
+* Hoàng Sa
+* Trường Sa
+* Biển Đông
+
+Khi cần thể hiện đầy đủ hơn:
+
+* Quần đảo Hoàng Sa (Việt Nam)
+* Quần đảo Trường Sa (Việt Nam)
+
+Tên tiếng Anh hoặc tên thay thế có thể tồn tại trong dữ liệu nội bộ để phục vụ truy vấn, nhưng không được thay thế tên hiển thị chính theo cấu hình này.
+
+Nguyên tắc kỹ thuật quan trọng: Không cho phép bản đồ chưa được kiểm chứng hiển thị trực tiếp trong bản phát hành.
+
+1.2. Sovereignty Validation Engine
+
+Phải phát triển một bộ kiểm thử độc lập có tên:
+
+VietnamSovereigntyValidator
+
+Bộ kiểm thử phải kiểm tra:
+
+* Dữ liệu bản đồ gốc.
+* Vector tile sau khi sinh.
+* Style JSON.
+* Các source-layer và lớp nhãn.
+* Lớp địa danh và ranh giới hành chính.
+* Dữ liệu offline PMTiles.
+* Các lớp bản đồ được cập nhật từ xa.
+* Hình ảnh bản đồ thực tế sau khi render.
+
+Phải kiểm tra tối thiểu các tình huống:
+
+* Toàn cảnh Việt Nam.
+* Khu vực Hoàng Sa.
+* Khu vực Trường Sa.
+* Toàn cảnh Biển Đông.
+* Khi bật/tắt các lớp bản đồ.
+* Khi thay đổi mức zoom.
+* Khi sử dụng chế độ sáng/tối.
+* Khi mất Internet.
+* Khi khôi phục kết nối.
+* Sau khi cập nhật dữ liệu hoặc style.
+
+Thực hiện cả kiểm thử ngữ nghĩa dữ liệu, kiểm thử tọa độ, kiểm thử hình ảnh và kiểm thử tích hợp.
+
+Không được chỉ dùng so khớp chuỗi để kết luận một bản đồ tuân thủ yêu cầu.
+
+1.3. Quy trình xử lý vi phạm
+
+Nếu phát hiện cách thể hiện không phù hợp:
+
+1. Xác định lỗi nằm tại nguồn dữ liệu, vector tile, style, layer, bộ cache hay trình render.
+2. Ngừng phân phối bộ tile/style không đạt yêu cầu.
+3. Ưu tiên chuyển sang bộ bản đồ dự phòng đã kiểm chứng.
+4. Sửa đúng lớp dữ liệu hoặc cấu hình gây lỗi.
+5. Tạo lại các tile chịu ảnh hưởng nếu cần.
+6. Xóa hoặc vô hiệu hóa cache không hợp lệ.
+7. Chạy lại Sovereignty Validation Engine.
+8. Chạy kiểm thử hiển thị trên Android.
+9. Chỉ kích hoạt lại nguồn dữ liệu khi toàn bộ bài kiểm thử P0 thành công.
+
+Không được coi việc che nhãn trên giao diện là đủ nếu dữ liệu tile nền vẫn chứa thành phần sai và có thể xuất hiện trở lại.
+
+Không sử dụng biện pháp sửa đổi dữ liệu của nhà cung cấp khi giấy phép không cho phép. Trong trường hợp đó, thay nguồn dữ liệu hoặc sử dụng pipeline độc lập hợp pháp.
+
+⸻
+
+PHẦN 2. KIẾN TRÚC CÔNG NGHỆ
+
+2.1. Công nghệ chính
+
+Ưu tiên hệ sinh thái mã nguồn mở, có quyền kiểm soát dữ liệu và style.
+
+Ứng dụng:
+
+* Flutter / Dart: giao diện và logic ứng dụng.
+* Kotlin: Android Native, dịch vụ nền và tối ưu hệ thống.
+* Android Gradle Plugin: build Android.
+* MethodChannel hoặc Pigeon: giao tiếp Flutter–Kotlin.
+* Coroutines và Flow: tác vụ Android bất đồng bộ.
+* Room/SQLite: quản lý dữ liệu cục bộ.
+
+Bản đồ:
+
+* MapLibre Native hoặc thư viện Flutter phù hợp với MapLibre.
+* MapLibre Style Specification.
+* OpenStreetMap hoặc nguồn GIS có giấy phép phù hợp.
+* GeoJSON.
+* Vector Tiles (MVT/PBF).
+* MBTiles hoặc PMTiles.
+* GDAL/OGR và các công cụ xử lý GIS phù hợp.
+* PostGIS cho pipeline bản đồ phía máy chủ khi cần.
+
+AI phải kiểm tra tài liệu và API phiên bản thư viện thực tế trước khi viết mã. Không được giả định thư viện Flutter hỗ trợ trực tiếp MBTiles hoặc PMTiles nếu chưa xác minh.
+
+Nếu thư viện bản đồ không đọc được tile offline trực tiếp, cần triển khai tile adapter, giao thức nguồn dữ liệu nội bộ hoặc giải pháp tích hợp tương thích.
+
+2.2. Kiến trúc phân lớp
+
+Thiết kế hệ thống theo các thành phần:
+
+A. Presentation Layer
+
+* MapScreen
+* MapControls
+* LayerSelector
+* OfflineDownloadScreen
+* SearchScreen
+* MapSettingsScreen
+
+B. Application Layer
+
+* MapController
+* CameraController
+* LayerController
+* ConnectivityController
+* MapModeController
+
+C. Data Layer
+
+* OnlineTileRepository
+* OfflineTileRepository
+* MapStyleRepository
+* GeoDataRepository
+* CacheRepository
+
+D. GIS Engine
+
+* CoordinateEngine
+* VectorTileEngine
+* GeoJSONEngine
+* SpatialIndexEngine
+* SovereigntyValidationEngine
+
+E. Android Native Layer
+
+* DownloadWorker
+* TileStorageManager
+* NetworkMonitor
+* FileIntegrityManager
+* StorageQuotaManager
+
+F. Data Pipeline
+
+* Source Data Ingestion
+* GIS Normalization
+* Geometry Validation
+* Sovereignty Validation
+* Vector Tile Generation
+* Style Generation
+* Offline Packaging
+* Release Validation
+
+Kiến trúc phải cho phép thay đổi nhà cung cấp dữ liệu mà không phải xây dựng lại toàn bộ ứng dụng.
+
+⸻
+
+PHẦN 3. BẢN ĐỒ ONLINE
+
+Ứng dụng phải có khả năng tải và hiển thị bản đồ qua Internet.
+
+Tính năng bắt buộc:
+
+1. Phóng to, thu nhỏ và di chuyển bản đồ mượt.
+2. Hiển thị vị trí GPS của thiết bị.
+3. Tìm kiếm địa danh.
+4. Hiển thị tên tỉnh, thành phố, đường và địa điểm.
+5. Chọn kiểu bản đồ.
+6. Quản lý các lớp dữ liệu GIS.
+7. Hiển thị biển, đảo và quần đảo theo cấu hình chủ quyền.
+8. Cache tile để hạn chế tải lại.
+9. Tự động điều chỉnh việc tải dữ liệu theo tình trạng mạng.
+10. Không phụ thuộc vào một máy chủ tile duy nhất.
+
+Các kiểu bản đồ dự kiến:
+
+* Standard Map.
+* Road Map.
+* Terrain Map.
+* Satellite/Imagery Map nếu có nguồn ảnh hợp pháp, tương thích.
+* Night Map.
+* Offline Map.
+
+Phải phân biệt rõ phần có thể tùy chỉnh bằng vector style với phần đã được vẽ sẵn trong raster tile hoặc ảnh vệ tinh.
+
+Không được khẳng định có thể sửa nhãn của một raster tile bằng cách chỉnh Style JSON.
+
+⸻
+
+PHẦN 4. BẢN ĐỒ OFFLINE TOÀN VIỆT NAM
+
+4.1. Yêu cầu hoạt động
+
+Ứng dụng phải cho phép tải bản đồ về thiết bị Android để sử dụng khi hoàn toàn không có kết nối Internet.
+
+Các gói tải:
+
+* Toàn Việt Nam.
+* Theo tỉnh/thành phố.
+* Theo vùng địa lý.
+* Theo khu vực do người dùng tự chọn.
+* Gói dữ liệu đảo, quần đảo và Biển Đông.
+
+Gói bản đồ Việt Nam phải được thiết kế để không bỏ sót Hoàng Sa, Trường Sa chỉ vì các quần đảo này nằm ngoài bounding box của phần đất liền.
+
+4.2. Kiến trúc offline
+
+Phải có:
+
+OfflineMapManager
+
+Các chức năng:
+
+* Download.
+* Pause.
+* Resume.
+* Cancel.
+* Verify.
+* Install.
+* Update.
+* Delete.
+* Rollback.
+
+Yêu cầu:
+
+* Hỗ trợ tải tiếp sau khi mất kết nối.
+* Quản lý dung lượng bộ nhớ.
+* Xác minh checksum.
+* Không kích hoạt gói tải lỗi hoặc chưa hoàn tất.
+* Có phiên bản manifest.
+* Gắn mã phiên bản style tương ứng với dữ liệu tile.
+* Kiểm tra chủ quyền trước khi đưa gói bản đồ vào sử dụng.
+* Hỗ trợ bộ bản đồ dự phòng.
+* Không tự động xóa dữ liệu hợp lệ của người dùng.
+
+4.3. Chuyển đổi Online/Offline
+
+Tạo HybridMapEngine.
+
+Quy tắc hoạt động:
+
+* Có Internet và nguồn hợp lệ: ưu tiên Online.
+* Mạng yếu: ưu tiên tile đã cache.
+* Mất Internet: chuyển sang Offline.
+* Có lại Internet: đồng bộ thông tin cần thiết.
+* Tile online lỗi: dùng nguồn dự phòng hoặc tile offline tương ứng.
+* Style hoặc tile không đạt kiểm thử chủ quyền: không hiển thị bản không đạt, sử dụng bản dự phòng đã xác minh.
+
+Chuyển đổi phải hạn chế tối đa màn hình trắng, giật, mất vị trí camera hoặc tự reset mức zoom.
+
+⸻
+
+PHẦN 5. HỆ THỐNG VECTOR TILE VÀ MAP STYLE
+
+5.1. Kiểm soát style
+
+Tạo một style riêng:
+
+vietnam_sovereign_style.json
+
+Phải kiểm soát được:
+
+* Background.
+* Land.
+* Water.
+* Coastline.
+* Roads.
+* Boundaries.
+* Place Labels.
+* Island Labels.
+* Sea Labels.
+* Symbols.
+* Text Fonts.
+* Text Collision.
+* Zoom Visibility.
+
+Bắt buộc có các lớp hiển thị Hoàng Sa, Trường Sa và Biển Đông được quản lý riêng hoặc có cơ chế bảo đảm tương đương.
+
+Dữ liệu vị trí, hình học và nhãn phải được đối chiếu với nguồn bản đồ được phê duyệt, không tự đặt hình học tùy tiện.
+
+5.2. Ưu tiên nhãn Việt Nam
+
+Cấu hình:
+
+primary_language = "vi"
+
+Ưu tiên tên tiếng Việt trong phạm vi bản đồ Việt Nam.
+
+Đặc biệt bảo đảm nhãn:
+
+* Hoàng Sa.
+* Trường Sa.
+* Biển Đông.
+
+Không để thuật toán va chạm nhãn làm mất hoàn toàn thông tin các quần đảo ở chế độ xem toàn quốc.
+
+Ở mức zoom thấp có thể dùng biểu tượng, nhãn rút gọn hoặc ô bản đồ phụ (inset map) để giữ được thông tin.
+
+Khi zoom gần, hiển thị chi tiết địa lý tương ứng với bộ dữ liệu đáng tin cậy.
+
+5.3. Xử lý dữ liệu nguồn
+
+Pipeline đề xuất:
+
+GIS Source → Normalize → Validate Geometry → Apply Display Rules → Generate Tiles → Validate Tiles → Package → Publish
+
+Phải phát hiện:
+
+* Nhãn không được phép trong vùng kiểm tra.
+* Đường yêu sách không được phép hiển thị.
+* Quan hệ hành chính không phù hợp với cấu hình.
+* Dữ liệu bị cắt do bounding box.
+* Hình học đảo bị mất.
+* Style che phủ nhãn quan trọng.
+* Tile bị sai hệ tọa độ.
+* Sự khác biệt giữa bản đồ online và offline.
+
+Tách biệt ranh giới đất liền, đường bờ biển, ranh giới hành chính và các đường yêu sách biển. Không đánh đồng chúng.
+
+⸻
+
+PHẦN 6. GIAO DIỆN FLUTTER
+
+Thiết kế giao diện hiện đại, dễ sử dụng trên điện thoại Android.
+
+Màn hình chính cần có:
+
+* Bản đồ toàn màn hình.
+* Nút định vị GPS.
+* Nút phóng to/thu nhỏ.
+* Thanh tìm kiếm.
+* Menu lựa chọn lớp bản đồ.
+* Chỉ báo trạng thái Online/Offline.
+* Công cụ tải bản đồ offline.
+* Màn hình thông tin địa điểm.
+* Trang cài đặt bản đồ.
+
+Thiết kế tối ưu thao tác một tay.
+
+Bản đồ phải hỗ trợ:
+
+* Portrait.
+* Landscape.
+* Dark Mode.
+* Thiết bị màn hình nhỏ.
+* Thiết bị có mật độ điểm ảnh cao.
+* Android máy cấu hình thấp.
+
+Bảo đảm các nút điều khiển không che khuất quá mức thông tin Hoàng Sa, Trường Sa trong khung nhìn toàn Việt Nam.
+
+⸻
+
+PHẦN 7. TÍCH HỢP KOTLIN ANDROID NATIVE
+
+Chỉ đưa tác vụ xuống Kotlin khi có lý do kỹ thuật rõ ràng.
+
+Các tác vụ ưu tiên:
+
+* Quản lý tải dữ liệu lớn.
+* WorkManager cho download bền vững.
+* Truy cập cơ sở dữ liệu tile.
+* Quản lý bộ nhớ.
+* Xử lý file dung lượng lớn.
+* Theo dõi trạng thái mạng.
+* Quản lý dịch vụ nền theo chính sách Android.
+* Kiểm tra tính toàn vẹn dữ liệu.
+
+Không yêu cầu quyền Android không cần thiết.
+
+Dữ liệu offline phải dùng cơ chế lưu trữ tương thích với các phiên bản Android được hỗ trợ.
+
+Nếu sử dụng local tile server, phải bảo đảm không mở dịch vụ tùy tiện ra mạng ngoài và phải kiểm thử vòng đời của dịch vụ.
+
+⸻
+
+PHẦN 8. HIỆU NĂNG VÀ KHẢ NĂNG MỞ RỘNG
+
+Mục tiêu:
+
+* Bản đồ di chuyển mượt.
+* Không tải lại dữ liệu không cần thiết.
+* Không làm nghẽn main thread Flutter.
+* Kiểm soát bộ nhớ RAM.
+* Giảm tiêu hao pin.
+* Hỗ trợ thiết bị có tài nguyên hạn chế.
+* Có cơ chế cache LRU hoặc phương án phù hợp.
+* Hỗ trợ nâng cấp bộ tile theo phiên bản.
+
+Phải đo hiệu năng thực tế trên Android.
+
+Không được tự tuyên bố ứng dụng đạt 60 FPS, tiết kiệm RAM hoặc khởi động tức thì khi chưa có kết quả benchmark.
+
+Kết quả benchmark phải có tên thiết bị, phiên bản Android, bộ dữ liệu, điều kiện mạng và cách đo.
+
+⸻
+
+PHẦN 9. MỞ RỘNG GIS VÀ GIAO THÔNG
+
+Kiến trúc phải hỗ trợ phát triển các module sau mà không cần thay thế bản đồ nền:
+
+* Biển báo giao thông.
+* Dữ liệu Mapillary.
+* Điểm GPS.
+* GeoJSON tùy chỉnh.
+* Tìm kiếm địa điểm.
+* Dẫn đường.
+* Định tuyến offline.
+* Cảnh báo giao thông.
+* Dữ liệu OpenStreetMap.
+* Quản lý điểm quan tâm (POI).
+* Theo dõi hành trình.
+
+Đối với Mapillary, tạo module có thể bật/tắt, sử dụng API hợp lệ và quản lý token an toàn.
+
+Không đưa Mapillary Access Token cố định vào mã nguồn được phân phối.
+
+Việc tải dữ liệu biển báo toàn Việt Nam phải được thiết kế riêng với cơ chế phân vùng, phân trang, chống trùng lặp và giới hạn API.
+
+Không để module biển báo giao thông ảnh hưởng đến kiểm thử hoặc quy tắc hiển thị bản đồ nền.
+
+⸻
+
+PHẦN 10. SOVEREIGNTY AUTOMATED TESTS
+
+Tạo thư mục:
+
+tests/sovereignty/
+
+Bắt buộc có các nhóm kiểm thử:
+
+Test A — Island Presence
+
+Kiểm tra sự hiện diện của dữ liệu Hoàng Sa, Trường Sa trong phạm vi địa lý dự kiến.
+
+Test B — Island Labels
+
+Kiểm tra nhãn hiển thị Hoàng Sa và Trường Sa đúng trong các khung nhìn được định nghĩa.
+
+Test C — Sea Label
+
+Kiểm tra nhãn Biển Đông trong bản đồ Việt Nam.
+
+Test D — Prohibited Claims
+
+Kiểm tra các nguồn dữ liệu và lớp hiển thị không chứa những đường yêu sách hoặc tên quản lý nước ngoài bị cấm theo cấu hình tại các khu vực liên quan.
+
+Test E — Style Integrity
+
+Kiểm tra Style JSON và các source-layer bắt buộc.
+
+Test F — Offline Integrity
+
+Kiểm tra bản đồ offline độc lập với Internet, bao gồm nhãn, hình học và tile.
+
+Test G — Visual Regression
+
+Chụp ảnh bản đồ thực tế ở các camera, zoom, theme và kích thước màn hình chuẩn.
+
+So sánh với các ảnh tham chiếu đã phê duyệt.
+
+Test H — Source Update
+
+Đưa một bộ dữ liệu giả lập có nhãn hoặc hình học không đạt quy tắc vào pipeline để xác nhận hệ thống phát hiện và từ chối.
+
+Test I — Cache and Rollback
+
+Kiểm tra bộ tile cũ không hợp lệ được vô hiệu hóa và phiên bản hợp lệ có thể phục hồi.
+
+Test J — National Overview
+
+Kiểm tra bản đồ ở chế độ toàn Việt Nam vẫn cung cấp khả năng nhìn thấy hoặc truy cập rõ ràng thông tin Hoàng Sa, Trường Sa và Biển Đông.
+
+Phải định nghĩa bộ dữ liệu chuẩn, vùng kiểm thử chuẩn, độ ưu tiên nhãn và mức zoom cụ thể.
+
+Sử dụng tọa độ và hình học tham chiếu đã được xác minh, không tạo đường biên hoặc đa giác chủ quyền bằng suy đoán.
+
+Điều kiện phát hành:
+
+Sovereignty_P0 = PASS
+
+Nếu bất kỳ test P0 nào thất bại, phải chặn việc phát hành gói dữ liệu hoặc phiên bản ứng dụng chịu ảnh hưởng.
+
+⸻
+
+PHẦN 11. BẢO MẬT, BẢN QUYỀN VÀ PHÁP LÝ
+
+Phải kiểm tra điều kiện sử dụng của từng nguồn dữ liệu.
+
+Đặc biệt:
+
+* Không tự ý tải hàng loạt tile từ máy chủ công cộng không cho phép tải offline.
+* Không loại bỏ attribution bắt buộc.
+* Không sửa tile của bên thứ ba trái giấy phép.
+* Không sử dụng API key bí mật theo cách có thể bị trích xuất dễ dàng.
+* Không sử dụng dữ liệu thiếu nguồn gốc cho các vùng địa lý nhạy cảm.
+* Không tự khẳng định ranh giới pháp lý chưa được kiểm chứng.
+
+Phải có tài liệu nguồn gốc dữ liệu và phiên bản.
+
+Các cách thể hiện liên quan đến tranh chấp lãnh thổ phải được quản lý bằng chính sách trình bày của sản phẩm và tài liệu bản đồ chính thống được phê duyệt, không coi nhãn dữ liệu cộng đồng là bằng chứng pháp lý.
+
+⸻
+
+PHẦN 12. CẤU TRÚC DỰ ÁN
+
+Đề xuất cấu trúc:
+
+vietnam_map/
+
+* android/ — mã Kotlin và cấu hình Android.
+* ios/ — giữ cấu trúc Flutter mặc định, chưa triển khai tính năng riêng trong giai đoạn Android.
+* lib/app/ — ứng dụng và điều hướng.
+* lib/core/ — tiện ích và cấu hình.
+* lib/features/map/ — giao diện bản đồ.
+* lib/features/offline/ — quản lý bản đồ offline.
+* lib/features/search/ — tìm kiếm.
+* lib/features/layers/ — quản lý GIS layers.
+* lib/features/location/ — GPS.
+* lib/platform/ — Flutter–Kotlin bridge.
+* assets/styles/ — style bản đồ.
+* assets/geo/ — dữ liệu địa lý hợp lệ cho phân phối.
+* pipeline/ — công cụ xây dựng tile.
+* tests/unit/ — unit tests.
+* tests/integration/ — integration tests.
+* tests/golden/ — visual tests.
+* tests/sovereignty/ — kiểm thử chủ quyền.
+* docs/ — tài liệu kỹ thuật.
+* scripts/ — build và kiểm tra.
+
+Sắp xếp lại chi tiết nếu cần để tuân thủ Clean Architecture và cấu trúc dự án Flutter thực tế.
+
+⸻
+
+PHẦN 13. QUY TRÌNH TRIỂN KHAI
+
+Giai đoạn 1 — Android Map Foundation
+
+* Khởi tạo Flutter project.
+* Cấu hình Kotlin.
+* Tích hợp MapLibre.
+* Hiển thị bản đồ online.
+* Xây dựng navigation và camera controls.
+* Xác lập nguồn dữ liệu và giấy phép.
+
+Kết quả: Android có bản đồ online hoạt động.
+
+Giai đoạn 2 — Vietnam Map Styling
+
+* Xây dựng style Việt Nam.
+* Cấu hình nhãn tiếng Việt.
+* Tạo layer Hoàng Sa, Trường Sa, Biển Đông.
+* Kiểm soát lớp ranh giới.
+* Kiểm thử hiển thị vùng biển đảo.
+
+Kết quả: Bản đồ online đạt P0.
+
+Giai đoạn 3 — Offline Engine
+
+* Tạo pipeline tile offline.
+* Quản lý gói tải.
+* Tích hợp Kotlin download manager.
+* Đọc bản đồ offline.
+* Kiểm tra toàn vẹn dữ liệu.
+* Chuyển đổi Online/Offline.
+
+Kết quả: Android sử dụng bản đồ ngoại tuyến thật.
+
+Giai đoạn 4 — Nationwide Map
+
+* Chuẩn bị dữ liệu toàn Việt Nam.
+* Xử lý và đóng gói theo vùng.
+* Tối ưu dung lượng.
+* Kiểm tra toàn bộ khu vực biển đảo.
+* Kiểm thử trên điện thoại thật.
+
+Kết quả: Bản đồ offline có phạm vi toàn Việt Nam theo bộ dữ liệu đã chuẩn bị.
+
+Giai đoạn 5 — Android Production
+
+* Performance profiling.
+* Crash testing.
+* Memory testing.
+* Battery testing.
+* Offline stress testing.
+* Sovereignty regression tests.
+* Kiểm thử nâng cấp, cache và rollback.
+* Build APK/AAB.
+
+Kết quả: Bản Android đủ điều kiện nghiệm thu.
+
+Giai đoạn 6 — iOS
+
+Không triển khai trước khi giai đoạn Android hoàn thành và được chấp thuận.
+
+Khi được cho phép:
+
+* Tái sử dụng phần Flutter dùng chung.
+* Tích hợp lớp native iOS khi cần.
+* Kiểm thử offline trên iPhone.
+* Kiểm tra dữ liệu và style tương đương Android.
+* Chạy lại bộ Sovereignty Validation.
+* Tối ưu và phát hành iOS.
+
+⸻
+
+PHẦN 14. QUY TẮC LÀM VIỆC CỦA AI
+
+AI phải đóng vai trò người triển khai phần mềm thực tế, không chỉ là người tư vấn.
+
+Bắt buộc:
+
+1. Trình bày kiến trúc trước khi xây dựng.
+2. Xác định dependency thực tế và kiểm tra khả năng tương thích.
+3. Viết mã nguồn theo từng module có thể biên dịch.
+4. Không dùng pseudocode thay cho phần chức năng được yêu cầu triển khai.
+5. Không bỏ trống các thành phần quan trọng bằng TODO mà vẫn tuyên bố hoàn thành.
+6. Có hướng dẫn thiết lập môi trường Android.
+7. Có quy trình xây dựng dữ liệu GIS và tile.
+8. Có test tự động.
+9. Có hướng dẫn chạy trên thiết bị Android.
+10. Báo cáo rõ phần đã thực hiện, chưa thực hiện, đã kiểm thử và chưa thể kiểm thử.
+
+Nếu môi trường AI không có quyền thực thi lệnh, build APK hoặc truy cập dữ liệu, phải nói rõ giới hạn; tuyệt đối không tạo kết quả kiểm thử giả.
+
+Khi phát hiện lỗi, phải nêu nguyên nhân, phương án sửa, nội dung thay đổi và kết quả kiểm tra lại.
+
+Không được tự chuyển sang phát triển iOS khi chưa có xác nhận.
+
+⸻
+
+PHẦN 15. TIÊU CHÍ NGHIỆM THU
+
+Ứng dụng chỉ được coi là hoàn thành phiên bản Android khi:
+
+* [ ]	Flutter project biên dịch thành công.
+* [ ]	Kotlin bridge hoạt động.
+* [ ]	Bản đồ online hiển thị được.
+* [ ]	Bản đồ offline hoạt động khi tắt hoàn toàn Internet.
+* [ ]	Định vị GPS hoạt động.
+* [ ]	Các lớp bản đồ hoạt động.
+* [ ]	Hoàng Sa được hiển thị theo quy tắc dự án.
+* [ ]	Trường Sa được hiển thị theo quy tắc dự án.
+* [ ]	Có nhãn Biển Đông đúng cấu hình.
+* [ ]	Không hiển thị đường yêu sách bị cấm trong khu vực kiểm tra.
+* [ ]	Style và vector tile vượt qua kiểm thử P0.
+* [ ]	Dữ liệu offline vượt qua kiểm thử P0.
+* [ ]	Có cơ chế xử lý tile/style sai và rollback.
+* [ ]	Kiểm thử Android có kết quả thực tế.
+* [ ]	Có tài liệu nguồn dữ liệu và giấy phép.
+* [ ]	Có hướng dẫn build APK/AAB.
+* [ ]	Có báo cáo hiệu năng và các giới hạn còn tồn tại.
+
+⸻
+
+PHẦN 16. LỆNH KHỞI ĐỘNG DÀNH CHO AI
+
+Bắt đầu xây dựng dự án Vietnam Sovereign Map Engine theo toàn bộ đặc tả trên.
+
+Ưu tiên tuyệt đối:
+
+P0: Kiểm soát cách thể hiện lãnh thổ Việt Nam, Hoàng Sa, Trường Sa, Biển Đông và kiểm thử tự động.
+
+P1: Ứng dụng Android Flutter/Kotlin chạy được với bản đồ online.
+
+P2: Offline map hoạt động độc lập với Internet.
+
+P3: Tối ưu dữ liệu toàn Việt Nam và hiệu năng thiết bị.
+
+P4: Các module GIS nâng cao, biển báo giao thông và dẫn đường.
+
+P5: Chuyển sang iOS sau nghiệm thu Android.
+
+Hãy bắt đầu bằng việc:
+
+1. Thiết kế kiến trúc kỹ thuật chi tiết.
+2. Lựa chọn các thư viện MapLibre/Flutter/Kotlin có khả năng đáp ứng yêu cầu.
+3. Xác định bộ dữ liệu địa lý chính thống và phương pháp kiểm chứng.
+4. Đề xuất pipeline xử lý tile, style và dữ liệu offline.
+5. Tạo cấu trúc thư mục dự án.
+6. Viết mã nguồn của phiên bản Android đầu tiên có thể chạy.
+7. Thiết lập bộ kiểm thử chủ quyền P0.
+8. Tiếp tục theo từng giai đoạn cho đến khi đạt các tiêu chí nghiệm thu trong khả năng của môi trường thực thi.
+
+Không được đánh đổi yêu cầu chủ quyền, tính chính xác GIS, khả năng hoạt động offline hoặc tính hợp pháp của dữ liệu để lấy tốc độ phát triển.
+
+ANDROID FIRST — OFFLINE CAPABLE — GIS VERIFIED — SOVEREIGNTY VALIDATED.

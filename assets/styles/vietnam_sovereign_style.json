@@ -1,0 +1,19 @@
+{
+  "version": 8,
+  "name": "NaviTaxi Vietnam sovereign style — blocked baseline",
+  "metadata": {
+    "navitaxi:primary_language": "vi",
+    "navitaxi:release_status": "blocked",
+    "navitaxi:note": "No sources or jurisdiction labels may render before P0 approval"
+  },
+  "sources": {},
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#e5edf2"
+      }
+    }
+  ]
+}
