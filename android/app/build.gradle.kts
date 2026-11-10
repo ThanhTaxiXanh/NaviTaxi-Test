@@ -13,9 +13,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21.toString()
-    }
 
     defaultConfig {
         applicationId = "vn.navitaxi.navi_taxi_test"
@@ -25,6 +22,12 @@ android {
         versionName = flutter.versionName
     }
 
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+    }
 }
 
 flutter {
