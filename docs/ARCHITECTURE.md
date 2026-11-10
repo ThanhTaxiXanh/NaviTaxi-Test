@@ -36,3 +36,7 @@ GIS intake -> provenance/usage review -> geometry normalization -> authoritative
 - https://pub.dev/packages/maplibre_gl/versions/0.27.1
 - https://maplibre.org/maplibre-native/android/examples/data/PMTiles/
 - https://developer.android.com/build/releases/about-agp
+
+## Android release build guard
+
+`assembleRelease` and `bundleRelease` depend on Gradle `verifySovereigntyP0`, which invokes the independent Python gate. Without the full source, MVT and screenshot evidence, Gradle exits nonzero. Debug builds can still exercise the shell.

@@ -25,14 +25,33 @@ android {
         versionName = flutter.versionName
     }
 
-    buildTypes {
-        release {
-            // Development only. Do not distribute until signing and P0 gate exist.
-            signingConfig = signingConfigs.getByName("debug")
-        }
-    }
 }
 
 flutter {
     source = "../.."
+}
+
+/** All release APK/AAB packaging must run the independent P0 gate. */
+val verifySovereigntyP0 by tasks.registering(Exec::class) {
+    val repositoryRoot = rootProject.projectDir.parentFile
+    workingDir(repositoryRoot)
+    commandLine(
+        "python3",
+        "pipeline/vietnam_sovereignty_validator.py",
+        "--repo-root",
+        repositoryRoot.absolutePath,
+        "--mode",
+        "release"
+    )
+}
+
+tasks.matching {
+    it.name in setOf(
+        "assembleRelease",
+        "bundleRelease",
+        "packageRelease",
+        "packageReleaseBundle"
+    )
+}.configureEach {
+    dependsOn(verifySovereigntyP0)
 }
