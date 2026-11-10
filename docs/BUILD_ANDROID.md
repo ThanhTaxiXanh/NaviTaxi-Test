@@ -15,7 +15,7 @@
    flutter devices
    flutter run -d <device-id>
    ```
-3. Android Gradle Plugin is pinned to 8.13.2 and Gradle 8.13. If `flutter create` regenerates templates, inspect the diff and keep manually audited Kotlin/Gradle settings.
+3. Android Gradle Plugin is pinned to 8.13.2 and Gradle 8.14.3. If `flutter create` regenerates templates, inspect the diff and keep manually audited Kotlin/Gradle settings.
 4. Map UI should show a neutral empty style and P0 warning. It must not display unknown third-party tiles or unsafe labels.
 5. Release APK/AAB is prohibited until `python3 pipeline/vietnam_sovereignty_validator.py --repo-root .` passes with real documentary, tile and rendered-image evidence and Android device tests. Development debug signatures are not production signing.
 

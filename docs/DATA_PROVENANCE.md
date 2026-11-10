@@ -22,7 +22,7 @@ Do not add the PMTiles archives to Git; handle via versioned artifact storage af
 
 1. Official Vietnamese cartographic reference and exact version/date for island topology, coastlines and territorial labeling.
 2. Reviewed geospatial features plus coordinates/geometry and documentary authority.
-3. Full MVT/PBF feature scan, prohibited-claim geometry verification and online/offline equivalent checks.
+3. Full MVT/PBF feature scan for **Roads and Buildings**, authoritative prohibited-claim geometry verification and online/offline equivalent checks. All 4,209 POI index entries have undergone a structural/WGS84-envelope scan only.
 4. Approved Android screenshots at all required cameras/zooms/themes/network conditions.
 5. Data origin/attribution/license and distribution approval.
 6. Offline manifest, update/rollback and post-install checksum audit.
@@ -32,3 +32,7 @@ Release gate currently fails by design.
 ## Decoded MVT geometry and geographic envelopes
 
 A deterministic local **128-directory-entry sample per archive** has been decoded to individual WGS84 feature envelopes. See [spatial scan procedure](SPATIAL_AUDIT.md) and the [machine-readable quarantine report](audits/2026-11-10-feature-spatial-sample.json). This does not provide approved sea/island boundaries or validate legal geometry. P0 remains blocked.
+
+## POI completed structural scan
+
+The POI archive's **4,209 of 4,209 index entries** were structurally scanned and rechecked by merging two contiguous ranges. Full scanned geometry contains 357,628 features and 1,120,681 decoded vertices. Two *name fields at one viewpoint* contain an English term for the South China Sea, retained as manual-review candidates rather than interpreted as a displayed maritime claim. See [full POI diagnostic report](audits/2026-11-10-poi-full-index-spatial.json). Source legitimacy and P0 correctness remain unverified.

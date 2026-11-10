@@ -3,8 +3,8 @@
 ## Decision log
 
 1. **Flutter/Dart presentation**: MapScreen, UI widgets and camera controller. Android only at this stage.
-2. **MapLibre GL 0.27.1**: native vector rendering, style JSON, PMTiles sources. Requires Flutter >= 3.29, Dart >= 3.7, JDK 21. Pin exact version until a verified upgrade.
-3. **Kotlin Android bridge**: minimal MethodChannel for app-scoped storage diagnostics; durable WorkManager downloads follow after manifest/checksum design. No broad filesystem permission.
+2. **MapLibre GL 0.27.1**: native vector rendering and style JSON. Offline PMTiles are NOT YET bound to a MapLibre source in the Flutter app. Requires Flutter >= 3.29, Dart >= 3.7, JDK 21. Pin exact version until a verified upgrade.
+3. **Kotlin Android bridge**: MethodChannel and SAF-backed SHA-256-verified PMTiles intake into app-private quarantine; durable WorkManager downloads and verified map activation remain pending. No broad filesystem permission.
 4. **Source repositories**: independent online vector tile sources, approved geography references, PMTiles offline packages. No public raster provider may override sovereign display policy.
 5. **Policy gates**: Flutter `MapRelease` blocks unapproved styles; independent Python validator blocks release. A Dart structural check is **not** a sovereignty validation.
 6. **Native PMTiles**: MapLibre Android >= 11.7 supports `pmtiles://https://` and `pmtiles://file://`; it does **not** give PMTiles a built-in offline download/cache system. Use app-managed atomic download+hash validation before activating local archives.
@@ -25,7 +25,7 @@ GIS intake -> provenance/usage review -> geometry normalization -> authoritative
 
 ## Delivery phases
 
-0. **Current**: bootstrap, quarantine manifest, PMTiles audit, P0 validator skeleton, unit tests.
+0. **Current**: bootstrap, quarantine manifest, complete PMTiles index verification, sampled/full MVT feature spatial diagnostics, resumable chunk reports, P0 validator skeleton and unit tests.
 1. Approved online basemap with validated Vietnamese labels, location and search.
 2. Kotlin WorkManager/offline package manager with pause/resume/hash/install/rollback.
 3. Nationwide+island coverage verified; device performance profiling.
