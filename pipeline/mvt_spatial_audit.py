@@ -58,8 +58,8 @@ def geometry_wgs84(geometry, geom_type: int, extent: int, tile_id: int) -> Geome
     has_line = False
     closed = False
     polygon_line_vertices = 0
-    west = south = float("inf")
-    east = north = float("-inf")
+    minimum_x = minimum_y = float("inf")
+    maximum_x = maximum_y = float("-inf")
     values = iter(packed(geometry))
 
     def validate_previous() -> None:
@@ -103,11 +103,8 @@ def geometry_wgs84(geometry, geom_type: int, extent: int, tile_id: int) -> Geome
                 y += (dy >> 1) ^ -(dy & 1)
                 if abs(x) > 64 * extent or abs(y) > 64 * extent:
                     raise MVTAuditError("Tile-local coordinates exceed safety limit")
-                lon, lat = slippy_to_lonlat(
-                    z, tile_x + x / extent, tile_y + y / extent
-                )
-                west, south = min(west, lon), min(south, lat)
-                east, north = max(east, lon), max(north, lat)
+                minimum_x, minimum_y = min(minimum_x, x), min(minimum_y, y)
+                maximum_x, maximum_y = max(maximum_x, x), max(maximum_y, y)
                 vertices += 1
     except StopIteration as exc:
         raise MVTAuditError("Truncated MVT geometry coordinate pair") from exc
@@ -115,6 +112,15 @@ def geometry_wgs84(geometry, geom_type: int, extent: int, tile_id: int) -> Geome
     if not paths or not vertices:
         raise MVTAuditError("Empty MVT geometry")
     validate_previous()
+    # The Web Mercator inverse is monotonic on each axis. Two opposite
+    # extreme tile-local vertices give the exact union bbox; this avoids
+    # expensive trig per vertex and keeps RAM independent of feature size.
+    west, north = slippy_to_lonlat(
+        z, tile_x + minimum_x / extent, tile_y + minimum_y / extent
+    )
+    east, south = slippy_to_lonlat(
+        z, tile_x + maximum_x / extent, tile_y + maximum_y / extent
+    )
     return GeometryExtent(
         geometry_type=kinds[geom_type],
         vertices=vertices,

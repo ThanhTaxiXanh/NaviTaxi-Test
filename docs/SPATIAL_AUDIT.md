@@ -1,7 +1,7 @@
 # MVT feature spatial diagnostics (WGS84)
 
 Stage 2 of the PMTiles intake: `pipeline/mvt_spatial_audit.py` decodes actual MVT
-feature geometry, validates command structure and converts individual vertices
+feature geometry, validates every coordinate pair and converts its extrema
 from tile-local coordinates into **WGS84 lon/lat**. It reports the union of
 decoded **feature bounding boxes**, not just parent tile footprints.
 
@@ -71,3 +71,7 @@ style render, glyphs and Android visual regressions remain unverified.
 Continue to enforce the existing release gate until all sources, geometry
 evidence and Android/airplane-mode test cases have been independently vetted.
 
+
+### Performance note
+
+For bounding-box-only diagnostics, the inverse Web Mercator function is monotone. The scanner validates every decoded vertex but projects only minimum/maximum tile-local coordinates per feature to WGS84. A 128-entry Buildings sample produced an identical JSON report before and after this optimization. It does not reconstruct the full geodesic feature geometry or test polygon topology.
