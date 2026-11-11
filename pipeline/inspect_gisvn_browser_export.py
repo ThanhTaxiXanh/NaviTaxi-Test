@@ -98,8 +98,15 @@ def run():
                 })
         page.on("response", record)
         try:
-            page.goto(PAGE,wait_until="domcontentloaded",timeout=60000)
-            page.wait_for_timeout(3000)
+            navigation = page.goto(PAGE,wait_until="domcontentloaded",timeout=60000)
+            page.wait_for_timeout(6000)
+            result["page_http_status"] = navigation.status if navigation else None
+            result["final_url"] = page.url
+            result["page_title"] = page.title()[:150]
+            result["button_count"] = page.locator("button").count()
+            result["page_source_has_export_handler"] = "taigeojson_tong_tuheader_SAUSAPNHAP" in page.content()
+            result["frame_urls"] = [frame.url[:180] for frame in page.frames]
+            result["body_preview"] = (page.locator("body").inner_text(timeout=5000)[:240]) if page.locator("body").count() else ""
             button = page.locator(SELECTOR)
             result["matching_34_province_geojson_buttons"] = button.count()
             if button.count()!=1:
