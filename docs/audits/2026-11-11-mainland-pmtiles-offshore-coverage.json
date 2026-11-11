@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "status": "OFFSHORE_SOURCE_BBOX_COVERAGE_INCOMPLETE_NOT_P0",
+  "point_crs": "VN-2000 / EPSG:4756",
+  "source_bbox_crs": "WGS84 / EPSG:4326",
+  "approved_datum_transform_used": false,
+  "official_island_name_reference_points": 183,
+  "source_archive_count": 3,
+  "source_bbox_coverage_count": 0,
+  "uncovered_reference_point_count": 183,
+  "covered_reference_points_per_archive": {
+    "hotosm_vnm_roads_osm.pmtiles": 0,
+    "hotosm_vnm_buildings_osm.pmtiles": 0,
+    "hotosm_vnm_points_of_interest_osm.pmtiles": 0
+  },
+  "section_coverage": {
+    "B": {
+      "covered": 0,
+      "total": 50
+    },
+    "C": {
+      "covered": 0,
+      "total": 133
+    }
+  },
+  "missing_critical_island_group_label_ids": [
+    "B50",
+    "C133",
+    "B48",
+    "C123",
+    "B15",
+    "B3"
+  ],
+  "source_archive_envelopes": [
+    {
+      "file": "hotosm_vnm_roads_osm.pmtiles",
+      "bbox_wgs84": [
+        102.127251,
+        8.42197,
+        109.461296,
+        23.399686
+      ]
+    },
+    {
+      "file": "hotosm_vnm_buildings_osm.pmtiles",
+      "bbox_wgs84": [
+        102.159032,
+        8.427456,
+        109.449674,
+        23.383397
+      ]
+    },
+    {
+      "file": "hotosm_vnm_points_of_interest_osm.pmtiles",
+      "bbox_wgs84": [
+        102.164762,
+        8.429519,
+        109.458161,
+        23.383397
+      ]
+    }
+  ],
+  "source_semantic_feature_coverage_verified": false,
+  "official_boundary_geometry_verified": false,
+  "p0_pass": false,
+  "maplibre_activation_allowed": false,
+  "notice": "Bboxes are necessary but not sufficient for visible labels; source data is mainland-only and may not be used to claim archipelago tile coverage.",
+  "input_archives_sha256": {
+    "hotosm_vnm_roads_osm.pmtiles": "ca575f95bc708ec1fb39e0c3b3f5ee4a3f1596e75e5a0b1f6e50f85e8a28bedd",
+    "hotosm_vnm_buildings_osm.pmtiles": "8c6f129a2bf2237215d90be72a52475cb6f0f528ac41dfabc5434d832ca37b6f",
+    "hotosm_vnm_points_of_interest_osm.pmtiles": "dda5a9de8412e8d6bdc73ae62d4fa2c3f8ef017bcbc0c833bc2a9e441be87763"
+  },
+  "official_pdf_sha256": "acde9b561eca24312b81efdcb36a22a8fc74e2dcb431f6c206199ef72c98e841"
+}

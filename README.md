@@ -41,3 +41,5 @@ See [34-province GIS source intake](docs/GISVN_34_PROVINCES.md), [candidate GIS 
 - [Giải trình 14 địa danh biển đảo bằng điểm nguồn chính thức và kiểm tra độc lập](docs/ISLAND_OUTLIER_RESOLUTION.md), chưa chứng nhận đường bao đất nổi.
 
 - [Fail-closed P0 binding at Flutter runtime](docs/P0_RUNTIME_ACTIVATION.md): editing JSON or layer IDs alone cannot turn on unapproved tile sources.
+
+- [P0 offshore tile coverage: 0/183 official points covered by existing HOTOSM mainland PMTiles](docs/P0_OFFSHORE_TILE_COVERAGE.md). A separately reviewed island/sea tile source is still required.
