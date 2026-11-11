@@ -1,0 +1,39 @@
+name: Quarantined physical GIS candidates
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'pipeline/generate_physical_context.py'
+      - 'pipeline/verify_physical_context.py'
+      - 'pipeline/requirements-context-gis.txt'
+      - 'assets/geo/physical_context_candidate_manifest.json'
+      - 'tests/sovereignty/test_context_candidate_gate.py'
+      - '.github/workflows/geo-candidates.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  generate-unapproved-candidates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned cartographic processing tools
+        run: pip install -r pipeline/requirements-context-gis.txt
+      - name: Generate physical GIS layers under quarantine
+        run: python -m pipeline.generate_physical_context --output-dir build/physical_context
+      - name: Independently validate SHA-256, geometry and fail-closed manifest
+        run: |
+          python -m pipeline.verify_physical_context build/physical_context             --expected-manifest assets/geo/physical_context_candidate_manifest.json             --report build/physical_context/validation_report.json
+      - name: Attach draft geodata for manual review (NOT A RELEASE)
+        uses: actions/upload-artifact@v4
+        with:
+          name: navitaxi-physical-gis-QUARANTINE-NOT-P0
+          path: build/physical_context/
+          if-no-files-found: error
+          retention-days: 7
