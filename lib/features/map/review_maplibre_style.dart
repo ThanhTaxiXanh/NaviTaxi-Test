@@ -182,6 +182,99 @@ class ReviewMaplibreStyle {
     return jsonEncode(style);
   }
 
+  /// Add ONLY locally imported, SHA-verified HOTOSM vector layers to the
+  /// DEBUG GIS preview. No MVT text/symbol label layer is ever used here.
+  /// This does not change the ordinary P0-blocked MapLibre style.
+  static String withOfflineMvt(
+    String rawReviewStyle,
+    Map<String, String> tileTemplates,
+  ) {
+    if (tileTemplates.isEmpty) return rawReviewStyle;
+    if (tileTemplates.keys.any(
+      (name) => !const {'roads', 'buildings', 'poi'}.contains(name),
+    )) {
+      throw const FormatException('Unrecognized PMTiles debug source');
+    }
+    final value = jsonDecode(rawReviewStyle);
+    if (value is! Map<String, dynamic>) {
+      throw const FormatException('Review style is not an object');
+    }
+    final metadata = value['metadata'] as Map<String, dynamic>;
+    if (metadata['navitaxi:p0_pass'] != false ||
+        metadata['navitaxi:debug_only'] != true) {
+      throw const FormatException('Cannot add PMTiles to non-debug style');
+    }
+    final sources = value['sources'] as Map<String, dynamic>;
+    final layers = value['layers'] as List<dynamic>;
+    final addedLayers = <Map<String, dynamic>>[];
+    final specifications = <String, (String, int)>{
+      'roads': ('roads', 13),
+      'buildings': ('buildings', 14),
+      'poi': ('points_of_interest', 12),
+    };
+    for (final entry in specifications.entries) {
+      final url = tileTemplates[entry.key];
+      if (url == null) continue;
+      if (!url.startsWith('http://127.0.0.1:') ||
+          !url.endsWith('/{z}/{x}/{y}.pbf')) {
+        throw const FormatException('Only local tokenized tile URLs allowed');
+      }
+      final sourceId = 'debug-local-${entry.key}';
+      sources[sourceId] = {
+        'type': 'vector',
+        'tiles': [url],
+        'minzoom': 0,
+        'maxzoom': entry.value.$2,
+      };
+      final sourceLayer = entry.value.$1;
+      if (entry.key == 'roads') {
+        addedLayers.add({
+          'id': 'debug-local-roads',
+          'type': 'line',
+          'source': sourceId,
+          'source-layer': sourceLayer,
+          'minzoom': 4,
+          'paint': {
+            'line-color': '#d29359',
+            'line-width': ['interpolate', ['linear'], ['zoom'],
+              4, 0.6, 12, 2.4, 16, 3.0],
+          },
+        });
+      } else if (entry.key == 'buildings') {
+        addedLayers.add({
+          'id': 'debug-local-buildings',
+          'type': 'fill',
+          'source': sourceId,
+          'source-layer': sourceLayer,
+          'minzoom': 10,
+          'paint': {
+            'fill-color': '#89999d',
+            'fill-opacity': 0.52,
+          },
+        });
+      } else {
+        addedLayers.add({
+          'id': 'debug-local-poi',
+          'type': 'circle',
+          'source': sourceId,
+          'source-layer': sourceLayer,
+          'minzoom': 10,
+          'paint': {
+            'circle-color': '#24866e',
+            'circle-radius': 3,
+            'circle-stroke-color': '#ffffff',
+            'circle-stroke-width': 0.5,
+          },
+        });
+      }
+    }
+    // Base geometries render BELOW the reviewed administrative/sea labels.
+    layers.insertAll(1, addedLayers);
+    metadata['navitaxi:offline_sources'] = tileTemplates.keys.toList()..sort();
+    metadata['navitaxi:offline_imported_only'] = true;
+    return jsonEncode(value);
+  }
+
   static Map<String, dynamic> _source(List<Map<String, dynamic>> features) => {
     'type': 'geojson',
     'data': {'type': 'FeatureCollection', 'features': features},
