@@ -1,0 +1,421 @@
+{
+  "schema_version": 1,
+  "status": "USER_UPLOADED_ZIP_GIS_SUMMARIES_ONLY_NOT_P0",
+  "original_zip_sha256": "51779d2585600ec053827a60890ba61cd2192f19b5ee153d38be18a2611d24cd",
+  "image_sha256": "23153838a0214ad7f1526eed9d7bc74a1557cf0fe437ea2ddb088be43ac49fea",
+  "image_printed_source": "Cục Đo đạc, Bản đồ và Thông tin địa lý Việt Nam, tháng 6/2025, 1:9.000.000",
+  "provenance": "User reports that ZIP originated from gis.vn; publisher provenance and redistribution permission not independently verified",
+  "metric_note": "Each bbox/area is diagnostic only, not an administrative, physical island or maritime jurisdiction certification",
+  "p0_pass": false,
+  "maplibre_activation_allowed": false,
+  "provinces": [
+    {
+      "code": "01",
+      "name": "Hà Nội",
+      "bbox_wgs84": [
+        105.28535,
+        20.56428,
+        106.02013,
+        21.38542
+      ],
+      "geodesic_area_km2": 3358.48,
+      "polygon_components": 1
+    },
+    {
+      "code": "04",
+      "name": "Cao Bằng",
+      "bbox_wgs84": [
+        105.26572,
+        22.35664,
+        106.8373,
+        23.11985
+      ],
+      "geodesic_area_km2": 6704.02,
+      "polygon_components": 1
+    },
+    {
+      "code": "08",
+      "name": "Tuyên Quang",
+      "bbox_wgs84": [
+        104.33423,
+        21.49758,
+        105.59915,
+        23.39264
+      ],
+      "geodesic_area_km2": 13794.47,
+      "polygon_components": 1
+    },
+    {
+      "code": "11",
+      "name": "Điện Biên",
+      "bbox_wgs84": [
+        102.14391,
+        20.8848,
+        103.59848,
+        22.54817
+      ],
+      "geodesic_area_km2": 9550.52,
+      "polygon_components": 1
+    },
+    {
+      "code": "12",
+      "name": "Lai Châu",
+      "bbox_wgs84": [
+        102.32067,
+        21.68574,
+        103.98509,
+        22.81123
+      ],
+      "geodesic_area_km2": 9069.19,
+      "polygon_components": 1
+    },
+    {
+      "code": "14",
+      "name": "Sơn La",
+      "bbox_wgs84": [
+        103.21205,
+        20.5736,
+        105.03291,
+        22.0305
+      ],
+      "geodesic_area_km2": 14111.46,
+      "polygon_components": 1
+    },
+    {
+      "code": "15",
+      "name": "Lào Cai",
+      "bbox_wgs84": [
+        103.53083,
+        21.32594,
+        105.10041,
+        22.84489
+      ],
+      "geodesic_area_km2": 13256.76,
+      "polygon_components": 1
+    },
+    {
+      "code": "19",
+      "name": "Thái Nguyên",
+      "bbox_wgs84": [
+        105.43083,
+        21.32572,
+        106.24719,
+        22.74127
+      ],
+      "geodesic_area_km2": 8375.13,
+      "polygon_components": 1
+    },
+    {
+      "code": "20",
+      "name": "Lạng Sơn",
+      "bbox_wgs84": [
+        106.09531,
+        21.32523,
+        107.36394,
+        22.46165
+      ],
+      "geodesic_area_km2": 8307.67,
+      "polygon_components": 1
+    },
+    {
+      "code": "22",
+      "name": "Quảng Ninh",
+      "bbox_wgs84": [
+        106.43883,
+        20.71659,
+        108.09337,
+        21.66381
+      ],
+      "geodesic_area_km2": 5840.21,
+      "polygon_components": 1774
+    },
+    {
+      "code": "24",
+      "name": "Bắc Ninh",
+      "bbox_wgs84": [
+        105.88114,
+        20.96935,
+        107.03352,
+        21.62648
+      ],
+      "geodesic_area_km2": 4713.34,
+      "polygon_components": 1
+    },
+    {
+      "code": "25",
+      "name": "Phú Thọ",
+      "bbox_wgs84": [
+        104.81387,
+        20.30512,
+        105.85808,
+        21.71953
+      ],
+      "geodesic_area_km2": 9351.94,
+      "polygon_components": 1
+    },
+    {
+      "code": "31",
+      "name": "Hải Phòng",
+      "bbox_wgs84": [
+        106.12428,
+        20.1242,
+        107.74145,
+        21.23738
+      ],
+      "geodesic_area_km2": 3081.64,
+      "polygon_components": 173
+    },
+    {
+      "code": "33",
+      "name": "Hưng Yên",
+      "bbox_wgs84": [
+        105.89351,
+        20.24901,
+        106.65947,
+        21.00703
+      ],
+      "geodesic_area_km2": 2572.64,
+      "polygon_components": 8
+    },
+    {
+      "code": "37",
+      "name": "Ninh Bình",
+      "bbox_wgs84": [
+        105.54277,
+        19.86734,
+        106.59636,
+        20.70368
+      ],
+      "geodesic_area_km2": 3886.65,
+      "polygon_components": 14
+    },
+    {
+      "code": "38",
+      "name": "Thanh Hóa",
+      "bbox_wgs84": [
+        104.37416,
+        19.28708,
+        106.07595,
+        20.67009
+      ],
+      "geodesic_area_km2": 11091.69,
+      "polygon_components": 18
+    },
+    {
+      "code": "40",
+      "name": "Nghệ An",
+      "bbox_wgs84": [
+        103.87479,
+        18.55212,
+        105.98903,
+        19.99777
+      ],
+      "geodesic_area_km2": 16484.44,
+      "polygon_components": 6
+    },
+    {
+      "code": "42",
+      "name": "Hà Tĩnh",
+      "bbox_wgs84": [
+        105.10387,
+        17.9138,
+        106.51072,
+        18.76626
+      ],
+      "geodesic_area_km2": 5966.9,
+      "polygon_components": 10
+    },
+    {
+      "code": "44",
+      "name": "Quảng Trị",
+      "bbox_wgs84": [
+        105.60803,
+        16.29952,
+        107.38946,
+        18.09016
+      ],
+      "geodesic_area_km2": 12686.95,
+      "polygon_components": 6
+    },
+    {
+      "code": "46",
+      "name": "Huế",
+      "bbox_wgs84": [
+        107.03449,
+        15.99468,
+        108.19493,
+        16.74292
+      ],
+      "geodesic_area_km2": 4938.92,
+      "polygon_components": 2
+    },
+    {
+      "code": "48",
+      "name": "Đà Nẵng",
+      "bbox_wgs84": [
+        107.21054,
+        14.95132,
+        112.77734,
+        17.12112
+      ],
+      "geodesic_area_km2": 12276.77,
+      "polygon_components": 32
+    },
+    {
+      "code": "51",
+      "name": "Quảng Ngãi",
+      "bbox_wgs84": [
+        107.33221,
+        13.92365,
+        109.14755,
+        15.43321
+      ],
+      "geodesic_area_km2": 14826.14,
+      "polygon_components": 14
+    },
+    {
+      "code": "52",
+      "name": "Gia Lai",
+      "bbox_wgs84": [
+        107.45136,
+        12.99602,
+        109.36345,
+        14.70313
+      ],
+      "geodesic_area_km2": 21580.9,
+      "polygon_components": 25
+    },
+    {
+      "code": "56",
+      "name": "Khánh Hòa",
+      "bbox_wgs84": [
+        108.55154,
+        6.93106,
+        117.39326,
+        12.86907
+      ],
+      "geodesic_area_km2": 11954.14,
+      "polygon_components": 393
+    },
+    {
+      "code": "66",
+      "name": "Đắk Lắk",
+      "bbox_wgs84": [
+        107.48418,
+        12.16055,
+        109.45888,
+        13.6953
+      ],
+      "geodesic_area_km2": 18098.85,
+      "polygon_components": 24
+    },
+    {
+      "code": "68",
+      "name": "Lâm Đồng",
+      "bbox_wgs84": [
+        107.20617,
+        9.97009,
+        109.08506,
+        12.8125
+      ],
+      "geodesic_area_km2": 24239.12,
+      "polygon_components": 11
+    },
+    {
+      "code": "75",
+      "name": "Đồng Nai",
+      "bbox_wgs84": [
+        106.41162,
+        10.57911,
+        107.57777,
+        12.29841
+      ],
+      "geodesic_area_km2": 12735.3,
+      "polygon_components": 1
+    },
+    {
+      "code": "79",
+      "name": "TP. Hồ Chí Minh",
+      "bbox_wgs84": [
+        106.08809,
+        8.57751,
+        107.57193,
+        11.50104
+      ],
+      "geodesic_area_km2": 6692.76,
+      "polygon_components": 40
+    },
+    {
+      "code": "80",
+      "name": "Tây Ninh",
+      "bbox_wgs84": [
+        105.50011,
+        10.39456,
+        106.74836,
+        11.78286
+      ],
+      "geodesic_area_km2": 8526.17,
+      "polygon_components": 1
+    },
+    {
+      "code": "82",
+      "name": "Đồng Tháp",
+      "bbox_wgs84": [
+        105.18723,
+        10.13482,
+        106.80781,
+        10.97345
+      ],
+      "geodesic_area_km2": 5779.98,
+      "polygon_components": 1
+    },
+    {
+      "code": "86",
+      "name": "Vĩnh Long",
+      "bbox_wgs84": [
+        105.68164,
+        9.52716,
+        106.79183,
+        10.34014
+      ],
+      "geodesic_area_km2": 6087.95,
+      "polygon_components": 2
+    },
+    {
+      "code": "91",
+      "name": "An Giang",
+      "bbox_wgs84": [
+        103.45793,
+        9.2543,
+        105.57572,
+        10.96193
+      ],
+      "geodesic_area_km2": 9841.22,
+      "polygon_components": 113
+    },
+    {
+      "code": "92",
+      "name": "Cần Thơ",
+      "bbox_wgs84": [
+        105.22576,
+        9.24516,
+        106.29817,
+        10.32499
+      ],
+      "geodesic_area_km2": 6352.95,
+      "polygon_components": 1
+    },
+    {
+      "code": "96",
+      "name": "Cà Mau",
+      "bbox_wgs84": [
+        104.52215,
+        8.41263,
+        105.86046,
+        9.63743
+      ],
+      "geodesic_area_km2": 7586.28,
+      "polygon_components": 23
+    }
+  ]
+}

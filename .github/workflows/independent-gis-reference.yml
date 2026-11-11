@@ -1,0 +1,34 @@
+name: Independent GIS data reference QA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'pipeline/compare_public_gis_reference.py'
+      - 'tests/sovereignty/test_public_gis_reference.py'
+      - 'docs/audits/2026-11-11-user-province34-reference-baseline.json'
+      - '.github/workflows/independent-gis-reference.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  reference-compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install GIS QA dependencies
+        run: pip install shapely==2.1.2 pyproj==3.7.2
+      - name: Compare independent 34-province GeoJSON to summarized user evidence
+        run: python -m pipeline.compare_public_gis_reference
+      - name: Publish metadata-only QA, never vendor GeoJSON
+        uses: actions/upload-artifact@v4
+        with:
+          name: navitaxi-34-provinces-independent-reference-QA-NOT-P0
+          path: build/reference-qa/reference-comparison.json
+          retention-days: 7
