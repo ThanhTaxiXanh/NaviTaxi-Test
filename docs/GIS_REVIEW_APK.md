@@ -81,3 +81,36 @@ archipelagos; verify the outlines/point markers render and no offshore
 polygon is filled as land. Compare the visible name labels while online;
 repeat airplane-mode testing to record the outstanding font issue.
 **This is not P0 approval, nor an Android run-result claim.**
+
+## Label-first review requirement (11/11/2026)
+
+The user's priority for this **private debug review** is the correct Vietnamese
+display of **Hoàng Sa**, **Trường Sa**, and **Biển Đông**, at their reviewed
+label anchors. Exact equality of every provincial polygon vertex is **not**
+the review objective. Do not present the unapproved polygon outline as a
+survey-grade or legal maritime boundary.
+
+The MapLibre reviewer now draws the three required names as Flutter text
+overlays projected from the underlying map's georeferenced
+`assets/review/preview_geometry.b64` anchors using
+`MapLibreMapController.toScreenLocationBatch`. During pan/zoom the overlay
+positions refresh from MapLibre's camera. Unlike MapLibre native symbol
+glyphs, these **three specific labels** do not need the network glyph server
+to render. The native `review-region-names` debug layer is hidden to avoid
+duplicate names. Other provincial/small-point names still use external demo
+glyphs; this is NOT an offline basemap or routing product.
+
+Suggested Android/manual checks:
+
+1. Verify the exact accents and capitalization at national overview and at
+   each of the three camera shortcuts.
+2. Pan and zoom; confirm every visible label moves with its geographic anchor.
+3. Enable airplane mode, reopen the debug reviewer, verify the three required
+   names still render, and record screenshots.
+4. Verify no foreign administrative label or unreviewed maritime line appears
+   in the review data. Keep the original P0 release gate blocked.
+
+The code and widget tests cover data integrity and layer ownership, **not**
+actual screenshots or runtime behavior on Android. This approach is
+purposefully less demanding than exact polygon equality, but production
+distribution and data-use obligations still need their own review.
