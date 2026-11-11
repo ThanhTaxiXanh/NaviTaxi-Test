@@ -23,4 +23,5 @@ flutter:
     - assets/manifests/map_release.json
     - assets/manifests/ingestion_inventory.json
     - assets/manifests/province34_review.json
+    - assets/geo/
     - assets/review/preview_geometry.b64
