@@ -1,0 +1,33 @@
+name: Official 2024 island point reference QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'pipeline/official_island_point_catalog.py'
+      - 'tests/sovereignty/test_official_island_point_catalog.py'
+      - '.github/workflows/official-island-reference-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  official-vn2000-points:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pdf text tools
+        run: sudo apt-get update -qq && sudo apt-get install -y poppler-utils
+      - name: Extract all official B/C island reference coordinates
+        run: python -m pipeline.official_island_point_catalog --download
+      - name: Upload source checksum and reference metadata only
+        uses: actions/upload-artifact@v4
+        with:
+          name: navitaxi-TT33-2024-official-point-reference-metadata-NOT-P0
+          path: build/official-points/qa.json
+          retention-days: 7
