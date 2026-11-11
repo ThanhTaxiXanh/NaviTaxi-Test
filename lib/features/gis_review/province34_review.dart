@@ -7,6 +7,7 @@ class Province34Review {
     required this.provinceCount, required this.offshoreCount,
     required this.sourceSha256, required this.packageSha256,
     required this.reviewRegions, required this.remainingChecks,
+    required this.officialPointReview,
   });
   final int provinceCount;
   final int offshoreCount;
@@ -14,6 +15,7 @@ class Province34Review {
   final String packageSha256;
   final List<OffshoreRegion> reviewRegions;
   final List<String> remainingChecks;
+  final OfficialIslandPointReview officialPointReview;
 
   static final RegExp _checksum = RegExp(r'^[a-f0-9]{64}$');
 
@@ -58,6 +60,9 @@ class Province34Review {
       sourceSha256: source, packageSha256: package,
       reviewRegions: regions,
       remainingChecks: List<String>.unmodifiable(remaining.cast<String>()),
+      officialPointReview: OfficialIslandPointReview.fromJson(
+        _officialPoints(json),
+      ),
     );
   }
 
@@ -68,6 +73,71 @@ class Province34Review {
       throw const FormatException('Not a GIS review JSON object');
     }
     return Province34Review.fromJson(object);
+  }
+}
+
+/// Island point counts are read-only QA, NEVER a source of approved polygons.
+Map<String, dynamic> _officialPoints(Map<String, dynamic> json) {
+  final value = json['official_point_review'];
+  if (value is! Map<String, dynamic>) {
+    throw const FormatException('Missing official island point QA summary');
+  }
+  return value;
+}
+
+class OfficialIslandPointReview {
+  const OfficialIslandPointReview({
+    required this.total,
+    required this.hoangSa,
+    required this.truongSa,
+    required this.inside,
+    required this.within2km,
+    required this.flaggedOver5km,
+    required this.independentIslandPoints,
+    required this.namedIslandOutlinesMissing,
+    required this.reefExposureUnknown,
+  });
+
+  final int total;
+  final int hoangSa;
+  final int truongSa;
+  final int inside;
+  final int within2km;
+  final int flaggedOver5km;
+  final int independentIslandPoints;
+  final int namedIslandOutlinesMissing;
+  final int reefExposureUnknown;
+
+  factory OfficialIslandPointReview.fromJson(Map<String, dynamic> source) {
+    if (source['datum'] != 'VN-2000' ||
+        source['datum_transform_approved_offshore'] != false ||
+        source['island_outline_geometry_verified'] != false ||
+        source['legal_maritime_boundary_verified'] != false ||
+        source['official_pdf_sha256'] !=
+            'acde9b561eca24312b81efdcb36a22a8fc74e2dcb431f6c206199ef72c98e841' ||
+        source['total'] != 183 ||
+        source['hoang_sa'] != 50 ||
+        source['truong_sa'] != 133 ||
+        source['inside_source_polygon'] != 141 ||
+        source['within_2km'] != 156 ||
+        source['flagged_over_5km'] != 14 ||
+        source['named_island_point_corroborated'] != 4 ||
+        source['named_island_outlines_missing'] != 4 ||
+        source['reef_or_shoal_exposure_unknown'] != 6 ||
+        source['submerged_or_region_label'] != 4) {
+      throw const FormatException('Untrusted/altered island P0 QA statistics');
+    }
+    return const OfficialIslandPointReview(
+      total: 183,
+      hoangSa: 50,
+      truongSa: 133,
+      inside: 141,
+      within2km: 156,
+      flaggedOver5km: 14,
+      independentIslandPoints: 4,
+      namedIslandOutlinesMissing: 4,
+      reefExposureUnknown: 6,
+    );
   }
 }
 

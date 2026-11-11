@@ -75,6 +75,39 @@ class _GisReviewScreenState extends State<GisReviewScreen> {
                 ),
               )),
             const SizedBox(height: 12),
+            Card(child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Đối chiếu địa danh Hoàng Sa và Trường Sa',
+                       style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  Text('Thông tư 33/2024: '
+                       '${report.officialPointReview.total} vị trí đã kiểm tra '
+                       '(Hoàng Sa ${report.officialPointReview.hoangSa}, '
+                       'Trường Sa ${report.officialPointReview.truongSa}).'),
+                  Text('Trong hoặc cách đa giác ≤2 km: '
+                       '${report.officialPointReview.within2km}/183'),
+                  Text('Điểm cách trên 5 km đã phân loại: '
+                       '${report.officialPointReview.flaggedOver5km}'),
+                  Text('Đảo có tọa độ đối chứng: '
+                       '${report.officialPointReview.independentIslandPoints}'),
+                  Text('Còn thiếu đường bao của '
+                       '${report.officialPointReview.namedIslandOutlinesMissing} '
+                       'đảo, và chưa phân loại đất nổi cho '
+                       '${report.officialPointReview.reefExposureUnknown} đá/bãi.'),
+                  const SizedBox(height: 6),
+                  const Text(
+                    'Phép chuyển VN-2000 sang WGS84 dùng ngoài khơi '
+                    'chưa được phê duyệt. Tọa độ địa danh không phải '
+                    'đường bao đảo hoặc ranh giới biển.',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+            )),
+            const SizedBox(height: 12),
             Text('Cần hoàn thiện',
                  style: Theme.of(context).textTheme.titleMedium),
             for (final check in report.remainingChecks)

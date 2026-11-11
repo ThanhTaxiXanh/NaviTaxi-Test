@@ -33,5 +33,22 @@
     "Đối chiếu từng đảo/bãi với tài liệu GIS có thẩm quyền",
     "Rà soát đa giác hành chính trước khi tô màu đất nổi",
     "Kiểm thử MapLibre theo mức zoom, ngôn ngữ và chế độ offline"
-  ]
+  ],
+  "official_point_review": {
+    "datum": "VN-2000",
+    "datum_transform_approved_offshore": false,
+    "island_outline_geometry_verified": false,
+    "legal_maritime_boundary_verified": false,
+    "official_pdf_sha256": "acde9b561eca24312b81efdcb36a22a8fc74e2dcb431f6c206199ef72c98e841",
+    "total": 183,
+    "hoang_sa": 50,
+    "truong_sa": 133,
+    "inside_source_polygon": 141,
+    "within_2km": 156,
+    "flagged_over_5km": 14,
+    "named_island_point_corroborated": 4,
+    "named_island_outlines_missing": 4,
+    "reef_or_shoal_exposure_unknown": 6,
+    "submerged_or_region_label": 4
+  }
 }

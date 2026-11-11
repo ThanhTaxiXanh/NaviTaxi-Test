@@ -21,6 +21,24 @@ void main() {
       {'code': '48', 'name': 'Đà Nẵng', 'count': 18, 'area_over_25_km2': 10},
       {'code': '56', 'name': 'Khánh Hòa', 'count': 297, 'area_over_25_km2': 30},
     ],
+    'official_point_review': {
+      'datum': 'VN-2000',
+      'datum_transform_approved_offshore': false,
+      'island_outline_geometry_verified': false,
+      'legal_maritime_boundary_verified': false,
+      'official_pdf_sha256':
+          'acde9b561eca24312b81efdcb36a22a8fc74e2dcb431f6c206199ef72c98e841',
+      'total': 183,
+      'hoang_sa': 50,
+      'truong_sa': 133,
+      'inside_source_polygon': 141,
+      'within_2km': 156,
+      'flagged_over_5km': 14,
+      'named_island_point_corroborated': 4,
+      'named_island_outlines_missing': 4,
+      'reef_or_shoal_exposure_unknown': 6,
+      'submerged_or_region_label': 4,
+    },
     'remaining_checks': <String>['Rà soát dữ liệu GIS'],
   };
 
@@ -29,6 +47,8 @@ void main() {
     expect(record.provinceCount, 34);
     expect(record.offshoreCount, 315);
     expect(record.reviewRegions.length, 2);
+    expect(record.officialPointReview.total, 183);
+    expect(record.officialPointReview.reefExposureUnknown, 6);
   });
 
   test('forged P0 approval never passes', () {
@@ -49,6 +69,16 @@ void main() {
   test('invalid source SHA-256 rejected', () {
     final json = valid()..['source_zip_sha256'] = 'wrong';
     expect(() => Province34Review.fromJson(json), throwsFormatException);
+  });
+
+  test('cannot falsely claim offshore datum or island outline approval', () {
+    final data = valid();
+    final review = data['official_point_review'] as Map<String, dynamic>;
+    review['datum_transform_approved_offshore'] = true;
+    expect(() => Province34Review.fromJson(data), throwsFormatException);
+    review['datum_transform_approved_offshore'] = false;
+    review['island_outline_geometry_verified'] = true;
+    expect(() => Province34Review.fromJson(data), throwsFormatException);
   });
 
   test('bundled review manifest is structurally safe', () async {
