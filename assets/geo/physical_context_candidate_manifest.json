@@ -1,0 +1,70 @@
+{
+  "declared_package_license": "LGPL-3.0-or-later",
+  "layers": [
+    {
+      "bytes": 293141,
+      "features": 130,
+      "file": "land_context.geojson",
+      "release_allowed": false,
+      "sha256": "595258dd7fe99df39c007c39832d8b32004f8889f11f77428f4f18e9ebb52741",
+      "status": "quarantine"
+    },
+    {
+      "bytes": 74252,
+      "features": 107,
+      "file": "small_landforms_review.geojson",
+      "release_allowed": false,
+      "sha256": "34bd564e0fd74ed7afec2bc614b1abbd0fa84aa6075653b497efbcbb0dc6ad8e",
+      "status": "quarantine"
+    },
+    {
+      "bytes": 322446,
+      "features": 153,
+      "file": "coastlines_context.geojson",
+      "release_allowed": false,
+      "sha256": "0c09da0fa509914a9fb6ed1d50adbd73a81d9cc84b4ca1249e041d325c53246f",
+      "status": "quarantine"
+    },
+    {
+      "bytes": 272281,
+      "features": 1,
+      "file": "water_context.geojson",
+      "release_allowed": false,
+      "sha256": "d22d0afa55e95d43ed554d871055be5518911cd6424a3fe1820959a952a7f5af",
+      "status": "quarantine"
+    },
+    {
+      "bytes": 46164,
+      "features": 28,
+      "file": "land_borders_REVIEW_ONLY.geojson",
+      "release_allowed": false,
+      "sha256": "9e645ece1521b159256080dd332bc4a43731b9af9bead79e73fc1e81cea5e5a4",
+      "status": "quarantine"
+    }
+  ],
+  "license_clearance_complete": false,
+  "missing_verification": [
+    "Vietnamese official cartographic source and version",
+    "Hoang Sa and Truong Sa detailed island and reef geometries",
+    "Vietnamese official boundary and island administrative attribution",
+    "LGPL-3.0-or-later attribution/distribution obligations and official source acceptance",
+    "Spatial comparison with approved official references",
+    "MapLibre and Android rendered screenshot review"
+  ],
+  "official_vietnam_reference_verified": false,
+  "p0_pass": false,
+  "schema_version": 1,
+  "source_origin": "Bundled GSHHS-derived physical data and political boundary linework",
+  "source_original_version": "GSHHG 2.3.6 (as stated in installed basemap-data 2.0.0 METADATA)",
+  "source_package": "basemap-data",
+  "source_version": "2.0.0",
+  "status": "quarantine",
+  "ui_activation_allowed": false,
+  "viewport_is_not_a_maritime_boundary": true,
+  "viewport_wgs84": [
+    97,
+    0,
+    127,
+    27
+  ]
+}
