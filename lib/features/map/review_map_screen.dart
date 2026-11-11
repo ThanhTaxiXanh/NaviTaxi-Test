@@ -33,12 +33,12 @@ class _ReviewMapScreenState extends State<ReviewMapScreen> {
     if (_viewport.isEmpty) return;
     final x = (lon - 100) / 20 * _worldWidth;
     final y = (25 - lat) / 21 * _worldHeight;
-    _transform.value = Matrix4.identity()
-      ..translate(
-        _viewport.width / 2 - x * scale,
-        _viewport.height / 2 - y * scale,
-      )
-      ..scale(scale);
+    // Set matrix entries directly: avoids deprecated transform helpers.
+    _transform.value = (Matrix4.identity()
+      ..setEntry(0, 0, scale)
+      ..setEntry(1, 1, scale)
+      ..setEntry(0, 3, _viewport.width / 2 - x * scale)
+      ..setEntry(1, 3, _viewport.height / 2 - y * scale));
     setState(() => _zoom = scale);
   }
 
