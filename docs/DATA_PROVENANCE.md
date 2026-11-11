@@ -22,7 +22,7 @@ Do not add the PMTiles archives to Git; handle via versioned artifact storage af
 
 1. Official Vietnamese cartographic reference and exact version/date for island topology, coastlines and territorial labeling.
 2. Reviewed geospatial features plus coordinates/geometry and documentary authority.
-3. Full MVT/PBF feature scan for **Roads and Buildings**, authoritative prohibited-claim geometry verification and online/offline equivalent checks. All 4,209 POI index entries have undergone a structural/WGS84-envelope scan only.
+3. The **structural** MVT payloads of Roads, Buildings and POI have now been scanned in full using a local native diagnostic decoder; independent approved reference/claim geometry verification and online/offline equivalent checks remain outstanding.
 4. Approved Android screenshots at all required cameras/zooms/themes/network conditions.
 5. Data origin/attribution/license and distribution approval.
 6. Offline manifest, update/rollback and post-install checksum audit.
@@ -36,3 +36,7 @@ A deterministic local **128-directory-entry sample per archive** has been decode
 ## POI completed structural scan
 
 The POI archive's **4,209 of 4,209 index entries** were structurally scanned and rechecked by merging two contiguous ranges. Full scanned geometry contains 357,628 features and 1,120,681 decoded vertices. Two *name fields at one viewpoint* contain an English term for the South China Sea, retained as manual-review candidates rather than interpreted as a displayed maritime claim. See [full POI diagnostic report](audits/2026-11-10-poi-full-index-spatial.json). Source legitimacy and P0 correctness remain unverified.
+
+## Complete native MVT payload scan, 2026-11-11
+
+All 44,154 index entries (with run_length=1 for each) were decoded structurally. The process inspected 14,687,399 MVT feature instances and 77,386,683 vertices across three archives. Python independently matched full POI and 256 Roads payloads. See [full scan report](FULL_STRUCTURAL_SCAN.md) and [machine-readable counts](audits/2026-11-11-all-archives-full-structural-scan.json). This does **not** validate legal boundary geometry, source license or MapLibre-rendered sovereignty. P0 remains BLOCKED.
