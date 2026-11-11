@@ -56,7 +56,8 @@ class AdminSearchDelegate extends SearchDelegate<AdminPlace?> {
               ? const Icon(Icons.my_location, size: 18)
               : const Icon(Icons.info_outline, size: 18),
           onTap: () {
-            if (place.hasAnchor) {
+            if (place.hasAnchor ||
+                const {'20333', '22736'}.contains(place.code)) {
               close(context, place);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
