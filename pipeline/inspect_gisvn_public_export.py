@@ -92,9 +92,9 @@ def main():
                     continue
                 script_text = script_bytes.decode("utf-8", errors="replace")
             patterns = [
-                r"function\\s+" + handler + r"\\s*\\(",
-                r"(?:window\\.)?" + handler + r"\\s*=\\s*(?:async\\s*)?function",
-                r"(?:window\\.)?" + handler + r"\\s*=\\s*(?:async\\s*)?\\(",
+                r"function\s+" + handler + r"\s*\(",
+                r"(?:window\.)?" + handler + r"\s*=\s*(?:async\s*)?function",
+                r"(?:window\.)?" + handler + r"\s*=\s*(?:async\s*)?\(",
             ]
             matches = [
                 match for pattern in patterns
