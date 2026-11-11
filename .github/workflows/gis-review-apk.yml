@@ -14,6 +14,18 @@ on:
       - 'assets/review/preview_geometry.b64'
       - 'test/review_map_data_test.dart'
       - '.github/workflows/gis-review-apk.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'lib/app/app.dart'
+      - 'lib/features/map/review_map_screen.dart'
+      - 'lib/features/map/review_map_data.dart'
+      - 'lib/features/map/review_maplibre_screen.dart'
+      - 'lib/features/map/review_maplibre_style.dart'
+      - 'test/review_maplibre_style_test.dart'
+      - 'test/review_maplibre_asset_test.dart'
+      - 'assets/review/preview_geometry.b64'
+      - '.github/workflows/gis-review-apk.yml'
   workflow_dispatch:
 
 permissions:
