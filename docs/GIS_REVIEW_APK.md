@@ -42,3 +42,42 @@ GitHub Actions builds a separate artifact
 Only the user should use this for manual review. Review notes and screenshots
 do not automatically authorize P0. Source rights and full Android MapLibre
 testing remain pending.
+
+## Native MapLibre preview in the same debug APK
+
+The GIS debug review screen now has a **layers** icon in its app bar. Tap it
+to open the *native MapLibre* reviewer. This path is additionally gated by
+both `kDebugMode` and `NAVITAXI_REVIEW_MODE=true`. It does not change
+`assets/styles/vietnam_sovereign_style.json`, the production release manifest,
+or the `MapRelease` P0 check.
+
+The MapLibre style is built on-device from the same previously embedded
+`assets/review/preview_geometry.b64` data. It uses five inline GeoJSON
+sources: coarsened administrative polygon **outlines only**, 34 name anchors,
+315 offshore component markers, 14 reference outlier points, and the three
+Vietnamese group labels. There is **no fill layer**, foreign basemap source,
+legal maritime line, coastline inference, routing graph or extra source
+dataset. Reference points are not island outlines. The source-derived
+preview is not an approved geodetic boundary.
+
+This first renderer experiment only claims locally available **geometry**.
+The MapLibre symbol layers currently request glyphs from the public MapLibre
+demo font endpoint, so text may disappear without Internet. Do **not**
+claim offline label coverage or online/offline parity until licensed font PBFs
+are bundled and tested on a disconnected Android device. It is important
+that the older Flutter Canvas reviewer remains available and can display
+its own text without network access.
+
+New commands:
+
+```bash
+flutter test test/review_maplibre_style_test.dart
+flutter test test/review_maplibre_asset_test.dart
+flutter build apk --debug --dart-define=NAVITAXI_REVIEW_MODE=true
+```
+
+Manual QA: tap the layers icon, open the nationwide view and both
+archipelagos; verify the outlines/point markers render and no offshore
+polygon is filled as land. Compare the visible name labels while online;
+repeat airplane-mode testing to record the outstanding font issue.
+**This is not P0 approval, nor an Android run-result claim.**
