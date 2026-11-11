@@ -2,13 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
+import 'admin_catalog.dart';
+import 'admin_search_delegate.dart';
 import 'review_label_anchors.dart';
 import 'review_map_data.dart';
 import 'review_maplibre_style.dart';
 
-/// Native MapLibre review renderer, deliberately isolated from P0 activation.
-/// The three mandatory Vietnamese labels are Flutter text overlays anchored
-/// by the map projection, so their display does not need network glyph PBFs.
+/// Native GIS viewer for private DEBUG builds. No production P0 activation.
+/// Administrative anchors are derived from source geometry, NOT legal borders.
 class ReviewMaplibreScreen extends StatefulWidget {
   const ReviewMaplibreScreen({super.key});
 
@@ -16,39 +17,69 @@ class ReviewMaplibreScreen extends StatefulWidget {
   State<ReviewMaplibreScreen> createState() => _ReviewMaplibreScreenState();
 }
 
+enum _LabelKind { region, province, ward }
+
 class _ProjectedLabel {
-  const _ProjectedLabel(this.name, this.x, this.y);
+  const _ProjectedLabel(this.name, this.x, this.y, this.kind);
 
   final String name;
   final double x;
   final double y;
+  final _LabelKind kind;
+}
+
+class _GeoLabel {
+  const _GeoLabel(this.name, this.latitude, this.longitude, this.kind);
+
+  final String name;
+  final double latitude;
+  final double longitude;
+  final _LabelKind kind;
 }
 
 class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
   static const bool _reviewRequested = bool.fromEnvironment(
     'NAVITAXI_REVIEW_MODE', defaultValue: false,
   );
+  static const double _wardLabelMinZoom = 8.5;
 
   late final Future<String> _style = _loadStyle();
-  List<ReviewLabelAnchor> _anchors = const [];
+  List<ReviewLabelAnchor> _regionAnchors = const [];
+  AdminCatalog? _catalog;
   List<_ProjectedLabel> _projected = const [];
   MapLibreMapController? _controller;
+  double _zoom = 3.4;
   bool _projecting = false;
   bool _projectAgain = false;
 
   Future<String> _loadStyle() async {
     final data = await ReviewMapData.load();
+    final catalog = await AdminCatalog.load();
     final style = ReviewMaplibreStyle.build(data);
-    _anchors = ReviewLabelAnchors.fromData(data);
+    _regionAnchors = ReviewLabelAnchors.fromData(data);
+    _catalog = catalog;
     return style;
   }
 
-  /// Runs projection against the native map camera rather than using a
-  /// hand-written Web Mercator approximation. Repeated camera events are
-  /// coalesced, and the final idle event forces a final refresh.
+  Future<void> _search() async {
+    final catalog = _catalog;
+    if (catalog == null) return;
+    final result = await showSearch<AdminPlace?>(
+      context: context,
+      delegate: AdminSearchDelegate(catalog),
+    );
+    if (result != null && result.hasAnchor && mounted) {
+      await _move(
+        result.latitude!,
+        result.longitude!,
+        result.isProvince ? 8.0 : 11.0,
+      );
+    }
+  }
+
   void _refreshLabels() {
     final controller = _controller;
-    if (controller == null || !mounted || _anchors.isEmpty) return;
+    if (controller == null || !mounted || _regionAnchors.isEmpty) return;
     if (_projecting) {
       _projectAgain = true;
       return;
@@ -59,24 +90,61 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
 
   Future<void> _projectLabels(MapLibreMapController controller) async {
     try {
-      final screenPoints = await controller.toScreenLocationBatch(
-        _anchors.map((anchor) => LatLng(anchor.latitude, anchor.longitude)),
+      final labels = <_GeoLabel>[
+        for (final anchor in _regionAnchors)
+          _GeoLabel(anchor.name, anchor.latitude, anchor.longitude,
+              _LabelKind.region),
+      ];
+
+      final catalog = _catalog;
+      if (catalog != null && catalog.reviewAnchorCount >= 34) {
+        final bounds = await controller.getVisibleRegion();
+        if (!mounted || _controller != controller) return;
+        final showWards = _zoom >= _wardLabelMinZoom;
+        if (_zoom >= 3.9) {
+          labels.addAll(
+            catalog.visible(
+              south: bounds.southwest.latitude,
+              north: bounds.northeast.latitude,
+              west: bounds.southwest.longitude,
+              east: bounds.northeast.longitude,
+              showWards: showWards,
+              limit: showWards ? 120 : 34,
+            ).map((place) => _GeoLabel(
+                  place.name,
+                  place.latitude!,
+                  place.longitude!,
+                  showWards ? _LabelKind.ward : _LabelKind.province,
+                )),
+          );
+        }
+      }
+
+      final pixels = await controller.toScreenLocationBatch(
+        labels.map((label) => LatLng(label.latitude, label.longitude)),
       );
-      if (!mounted || _controller != controller) return;
-      if (screenPoints.length != _anchors.length) {
-        throw const FormatException('Incorrect map projection result');
-      }
-      final projected = <_ProjectedLabel>[];
-      for (var i = 0; i < _anchors.length; i++) {
-        final x = screenPoints[i].x.toDouble();
-        final y = screenPoints[i].y.toDouble();
+      if (!mounted || _controller != controller ||
+          pixels.length != labels.length) return;
+
+      final accepted = <_ProjectedLabel>[];
+      final occupied = <String>{};
+      for (var i = 0; i < labels.length; i++) {
+        final x = pixels[i].x.toDouble();
+        final y = pixels[i].y.toDouble();
         if (!x.isFinite || !y.isFinite) continue;
-        projected.add(_ProjectedLabel(_anchors[i].name, x, y));
+        final item = labels[i];
+        if (item.kind != _LabelKind.region) {
+          // Simple collision grid: readable labels at street-level zoom
+          // instead of thousands of overlapping Flutter text widgets.
+          final cell = '${(x / 132).floor()}:${(y / 44).floor()}';
+          if (!occupied.add(cell)) continue;
+        }
+        accepted.add(_ProjectedLabel(item.name, x, y, item.kind));
       }
-      setState(() => _projected = projected);
+      setState(() => _projected = accepted);
     } catch (_) {
-      // Initial camera/style transitions can temporarily reject projection.
-      // Subsequent onCameraIdle/onStyleLoadedCallback events retry safely.
+      // Native map may reject queries during layout/style changes.
+      // Another camera-idle/style-loaded event can refresh the overlay.
     } finally {
       _projecting = false;
       if (_projectAgain && mounted) {
@@ -101,24 +169,38 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
   }
 
   Widget _labelAt(_ProjectedLabel label) {
+    final isRegion = label.kind == _LabelKind.region;
+    final isProvince = label.kind == _LabelKind.province;
     return IgnorePointer(
       child: FractionalTranslation(
         translation: const Offset(-0.5, -0.5),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: const Color(0xF4F6FCFF),
-            border: Border.all(color: const Color(0xFF9AB9C5)),
-            borderRadius: BorderRadius.circular(8),
+            color: isRegion
+                ? const Color(0xF4F6FCFF)
+                : const Color(0xEAF9FBFC),
+            border: Border.all(
+              color: isRegion
+                  ? const Color(0xFF9AB9C5)
+                  : const Color(0x669AB9C5),
+            ),
+            borderRadius: BorderRadius.circular(6),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+            padding: EdgeInsets.symmetric(
+              horizontal: isRegion ? 7 : 4,
+              vertical: isRegion ? 4 : 2,
+            ),
             child: Text(
               label.name,
               maxLines: 1,
-              style: const TextStyle(
-                color: Color(0xFF164464),
-                fontSize: 15,
-                fontWeight: FontWeight.w800,
+              style: TextStyle(
+                color: isRegion
+                    ? const Color(0xFF164464)
+                    : const Color(0xFF244D62),
+                fontSize: isRegion ? 15 : (isProvince ? 12 : 10.5),
+                fontWeight:
+                    isRegion ? FontWeight.w800 : FontWeight.w600,
               ),
             ),
           ),
@@ -132,20 +214,27 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
     if (!kDebugMode || !_reviewRequested) {
       return const Scaffold(
         body: Center(
-          child: Text('Bản xem trước MapLibre chỉ có trong APK debug GIS.'),
+          child: Text('Bản xem trước GIS chỉ có trong APK debug.'),
         ),
       );
     }
     return Scaffold(
-      appBar: AppBar(title: const Text('NaviTaxi • MapLibre GIS QA')),
+      appBar: AppBar(
+        title: const Text('NaviTaxi • Bản đồ Việt Nam'),
+        actions: [
+          IconButton(
+            tooltip: 'Tìm tỉnh, xã, phường',
+            onPressed: _search,
+            icon: const Icon(Icons.search),
+          ),
+        ],
+      ),
       body: FutureBuilder<String>(
         future: _style,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(
-              child: Text(
-                'Dữ liệu GIS không hợp lệ. Đã từ chối hiển thị bản xem trước.',
-              ),
+              child: Text('Không đọc được dữ liệu GIS hoặc danh mục địa danh.'),
             );
           }
           if (!snapshot.hasData) {
@@ -155,16 +244,16 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
             children: [
               const MaterialBanner(
                 content: Text(
-                  'CHỈ KIỂM THỬ • NOT P0. Hoàng Sa, Trường Sa, Biển Đông '
-                  'được ghim bằng nhãn Flutter, không cần glyph trực tuyến. '
-                  'Viền tỉnh giản lược không phải đường bờ đảo hay ranh giới biển. '
-                  'Tên tỉnh/điểm nhỏ của MapLibre vẫn có thể cần Internet.',
+                  'GIS REVIEW • Chưa phải bản đồ dẫn đường. '
+                  '34 tỉnh và 3.321 xã/phường/đặc khu có thể tìm theo tên. '
+                  'Tên đặt trên bản đồ từ điểm đại diện của GIS; '
+                  'không phải mốc ranh giới hay xác nhận chủ quyền.',
                   style: TextStyle(fontSize: 12),
                 ),
-                actions: [Text('GIS DEBUG')],
+                actions: [Text('NOT P0')],
               ),
               SizedBox(
-                height: 54,
+                height: 52,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
@@ -183,6 +272,14 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
                     TextButton(
                       onPressed: () => _move(13.5, 111.5, 4.3),
                       child: const Text('Biển Đông'),
+                    ),
+                    TextButton(
+                      onPressed: () => _move(21.028, 105.854, 10.5),
+                      child: const Text('Hà Nội'),
+                    ),
+                    TextButton(
+                      onPressed: () => _move(10.776, 106.7, 10.5),
+                      child: const Text('TP. Hồ Chí Minh'),
                     ),
                   ],
                 ),
@@ -204,7 +301,10 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
                             _refreshLabels();
                           },
                           onStyleLoadedCallback: _refreshLabels,
-                          onCameraMove: (_) => _refreshLabels(),
+                          onCameraMove: (camera) {
+                            _zoom = camera.zoom;
+                            _refreshLabels();
+                          },
                           onCameraIdle: _refreshLabels,
                           compassEnabled: true,
                           rotateGesturesEnabled: true,
@@ -225,14 +325,17 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(12, 6, 12, 10),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 5, 12, 10),
                 child: Text(
-                  'Nhãn Việt Nam bám tọa độ điểm tham chiếu (không biểu thị '
-                  'ranh giới). Không có dữ liệu dẫn đường. '
-                  'Cần kiểm tra thực tế chế độ máy bay trước khi kết luận offline.',
+                  _catalog?.reviewAnchorCount == 3353
+                      ? 'Phóng gần để xem tên xã/phường. '
+                          'Nhãn hiển thị không cần Internet; '
+                          'đường sá và dẫn đường chưa được tích hợp.'
+                      : 'Đã có danh mục 34 tỉnh và 3.321 xã/phường. '
+                          'Bản build này chưa có điểm đặt nhãn GIS chi tiết.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 11),
+                  style: const TextStyle(fontSize: 11),
                 ),
               ),
             ],
