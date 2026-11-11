@@ -113,6 +113,19 @@ def run():
                 result["status"]="BUTTON_NOT_UNIQUELY_FOUND"
             else:
                 result["public_button_visible"] = button.is_visible()
+                result["button_visibility_ancestors"] = button.evaluate("""(button) => {
+                    const result=[]; let element=button;
+                    for(let depth=0; element && depth<7; depth++, element=element.parentElement) {
+                        const style=window.getComputedStyle(element);
+                        result.push({
+                            tag:element.tagName, id:element.id, classes:element.className?.toString()?.slice(0,140),
+                            display:style.display, visibility:style.visibility,
+                            hidden:element.hidden, disabled:element.disabled || false,
+                            text: element.innerText?.slice(0,130)
+                        });
+                    }
+                    return result;
+                }""")
                 result["handler_type"] = page.evaluate(
                     "typeof window.taigeojson_tong_tuheader_SAUSAPNHAP"
                 )
