@@ -72,7 +72,10 @@ void main() {
       bad[7] = 2;
       final file = File('${dir.path}/bad.pmtiles');
       await file.writeAsBytes(bad);
-      expect(() => PmtilesV3Archive.open(file.path), throwsFormatException);
+      await expectLater(
+        PmtilesV3Archive.open(file.path),
+        throwsFormatException,
+      );
     } finally {
       await dir.delete(recursive: true);
     }
