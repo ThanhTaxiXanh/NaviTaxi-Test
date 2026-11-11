@@ -162,7 +162,12 @@ class ReviewMaplibreStyle {
         {
           'id': 'review-region-names', 'type': 'symbol',
           'source': 'review-regions',
+          // Required group labels are drawn with Flutter's bundled text
+          // renderer in ReviewMaplibreScreen: no external glyph PBF needed.
+          // Keep this debug-only layer as a source diagnostic, but hide it
+          // to prevent duplicates and network-dependent native text.
           'layout': {
+            'visibility': 'none',
             'text-field': ['get', 'name'], 'text-size': 19,
             'text-font': ['Noto Sans Regular'],
             'text-allow-overlap': true,
