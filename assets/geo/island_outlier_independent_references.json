@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "source": "Primary official Ministry Circular 33/2024/TT-BTNMT B/C point list; independent corroboration for four named islands",
+  "official_pdf_url": "https://mae.gov.vn/noidung/Lists/VBQPPL/Attachments/514/1_DanhMuc_TT_DiaDanh_BanHanh.pdf",
+  "official_pdf_sha256": "acde9b561eca24312b81efdcb36a22a8fc74e2dcb431f6c206199ef72c98e841",
+  "source_datum": "VN-2000",
+  "tolerance_km_for_independent_point_screen": 1,
+  "independent_positions": [
+    {
+      "reference_id": "B48",
+      "name": "Đảo Tri Tôn",
+      "published_vn2000": [
+        111.1975,
+        15.785833333
+      ],
+      "independent_position": [
+        111.19666666666667,
+        15.786666666666667
+      ],
+      "independent_position_format": "degrees_and_decimal_minutes",
+      "independent_source": "Cổng thông tin TP. Đà Nẵng",
+      "url": "https://soyte.danang.gov.vn/web/dng/-/ubnd-huy%E1%BB%87n-ho%C3%A0ng-sa"
+    },
+    {
+      "reference_id": "B15",
+      "name": "Đảo Bạch Quy",
+      "published_vn2000": [
+        111.781666667,
+        16.058333333
+      ],
+      "independent_position": [
+        111.78166666666667,
+        16.058333333333334
+      ],
+      "independent_position_format": "degrees_and_decimal_minutes",
+      "independent_source": "Cổng thông tin TP. Đà Nẵng",
+      "url": "https://soyte.danang.gov.vn/web/dng/-/ubnd-huy%E1%BB%87n-ho%C3%A0ng-sa"
+    },
+    {
+      "reference_id": "B3",
+      "name": "Đảo Quang Ảnh",
+      "published_vn2000": [
+        111.505555556,
+        16.449166667
+      ],
+      "independent_position": [
+        111.51333333333334,
+        16.45
+      ],
+      "independent_position_format": "degrees_and_decimal_minutes",
+      "independent_source": "Cổng thông tin TP. Đà Nẵng",
+      "url": "https://soyte.danang.gov.vn/web/dng/-/ubnd-huy%E1%BB%87n-ho%C3%A0ng-sa"
+    },
+    {
+      "reference_id": "C123",
+      "name": "Đảo An Bang",
+      "published_vn2000": [
+        112.919722222,
+        7.893333333
+      ],
+      "independent_position": [
+        112.92111111111112,
+        7.891666666666667
+      ],
+      "independent_position_format": "DMS GPS independent approximate point",
+      "independent_source": "AMTI CSIS; regional corroboration also supported by Nha Trang Port Authority navigation notice",
+      "url": "https://amti.csis.org/amboyna-cay/",
+      "secondary_url": "https://cangvuhanghainhatrang.gov.vn/index.aspx?id=1801&page=detail"
+    }
+  ],
+  "reference_points_are_not_island_boundaries": true,
+  "coordinate_transform_from_vn2000_to_wgs84_verified": false,
+  "maplibre_activation_allowed": false,
+  "p0_pass": false
+}
