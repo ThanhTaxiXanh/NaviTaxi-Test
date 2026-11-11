@@ -103,8 +103,10 @@ class OfflineMvtServer {
       reply.headers.contentLength = tile.length;
       reply.add(tile);
     } catch (_) {
-      if (!reply.headersSent) {
+      try {
         reply.statusCode = HttpStatus.internalServerError;
+      } catch (_) {
+        // Response may already have started when a client disconnects.
       }
     } finally {
       try {
