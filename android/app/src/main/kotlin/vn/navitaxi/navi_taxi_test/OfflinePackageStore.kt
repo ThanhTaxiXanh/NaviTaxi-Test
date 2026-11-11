@@ -17,8 +17,8 @@ import java.util.concurrent.Executors
  * Secure local intake of user-selected PMTiles.
  *
  * All archives remain under app-private /files/offline-quarantine/. This class
- * never exposes an archive to MapLibre, even if SHA-256 matches. P0 GIS review
- * and an independently approved release manifest are separate prerequisites.
+ * permits strictly debug-only local review AFTER a complete SHA-256 check.
+ * Production P0 map activation remains independently gated and unmodified.
  *
  * SAF is used for the initial user-file import, so broad Android storage
  * permissions are unnecessary. The executor keeps large file I/O off the UI.
@@ -92,6 +92,25 @@ class OfflinePackageStore(private val activity: FlutterActivity) {
                         "bytes" to file.length(),
                         "status" to "quarantined"
                     )
+                }
+            }
+            "getVerifiedArchivePathsDebug" -> {
+                // Never grant local tile access to a non-debug APK.
+                val debugBuild = activity.applicationInfo.flags and
+                    android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE != 0
+                if (!debugBuild) {
+                    result.error("DEBUG_ONLY", "PMTiles review is not available in release builds", null)
+                    return
+                }
+                runIo(result) {
+                    knownArchives.entries.mapNotNull { (filename, spec) ->
+                        val file = File(quarantineDir, filename)
+                        val valid = file.isFile &&
+                            file.length() == spec.bytes &&
+                            hasValidHeader(file) &&
+                            digest(file) == spec.sha256
+                        if (valid) filename to file.canonicalPath else null
+                    }.toMap()
                 }
             }
             "verifyImported" -> {
