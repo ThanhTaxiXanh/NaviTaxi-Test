@@ -77,10 +77,17 @@ def compare_reference(reference: dict, baseline: dict) -> dict:
     unmatched = []
     for index, feature in enumerate(reference.get("features", [])):
         props = feature.get("properties") or {}
-        identities = {
-            norm(v) for v in props.values()
-            if isinstance(v, str) and norm(v) in roster
-        }
+        priority_fields = (
+            "TinhThanh", "TEN_TINH", "ten_tinh", "TenTinh", "NAME", "name",
+        )
+        name_values = [
+            props[key] for key in priority_fields
+            if isinstance(props.get(key), str)
+        ]
+        if not name_values:
+            name_values = [v for v in props.values() if isinstance(v, str)]
+        identities = {norm(v) for v in name_values if norm(v) in roster}
+        label_preview = {str(k): str(v)[:100] for k,v in list(props.items())[:10]}
         if len(identities) != 1:
             unmatched.append({
                 "feature_index": index,
@@ -88,12 +95,18 @@ def compare_reference(reference: dict, baseline: dict) -> dict:
                     k: str(v)[:75] for k, v in list(props.items())[:6]
                 },
                 "candidate_identity_count": len(identities),
+                "source_properties_preview": label_preview,
             })
             continue
         name = next(iter(identities))
         baseline_row = roster[name]
         if name in seen:
-            unmatched.append({"feature_index": index, "reason": "duplicate province"})
+            unmatched.append({
+                "feature_index": index,
+                "reason": "duplicate province",
+                "source_properties_preview": label_preview,
+                "normalized_name": name,
+            })
             continue
         seen.add(name)
         g = shape(feature["geometry"])
@@ -105,6 +118,7 @@ def compare_reference(reference: dict, baseline: dict) -> dict:
         )
         base_area = baseline_row["geodesic_area_km2"]
         matches.append({
+            "source_feature_index": index,
             "code": baseline_row["code"],
             "province": baseline_row["name"],
             "independent_bbox_wgs84": [round(x, 5) for x in g.bounds],
@@ -175,7 +189,18 @@ def main():
         output["reference_sha256"] = hashlib.sha256(raw).hexdigest()
         output["reference_bytes"] = len(raw)
         output["comparison"] = compare_reference(doc, baseline)
-        output["status"] = "REFERENCE_COMPARISON_COMPLETED_NOT_P0"
+        comparison = output["comparison"]
+        output["status"] = (
+            "REFERENCE_COMPARISON_REVIEW_REQUIRED_NOT_P0"
+            if (comparison["matched_provinces"] != 34 or
+                comparison["missing_user_provinces"] or
+                comparison["unmatched_reference_features"] or
+                comparison["high_variance_regions"])
+            else "REFERENCE_COMPARISON_COMPLETED_NOT_P0"
+        )
+        output["reference_feature_property_keys"] = sorted(
+            list((doc["features"][0].get("properties") or {}).keys())
+        ) if doc.get("features") else []
         code = 0
     except Exception as exc:
         output["error_type"] = type(exc).__name__
