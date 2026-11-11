@@ -33,6 +33,7 @@ def extract_points(pdf_path: Path):
     b = list(re.finditer(r"(?m)^\s*B\s+QUẦN ĐẢO HOÀNG\s+SA\b", text))
     c = list(re.finditer(r"(?m)^\s*C\s+QUẦN ĐẢO TRƯỜNG\s+SA\b", text))
     if not b or not c or b[-1].start() >= c[-1].start():
+        print("HEADING_QA", {"B":len(b),"C":len(c),"sample":repr(text[-16000:-14000]),"h":text.rfind("HOÀNG SA"),"t":text.rfind("TRƯỜNG SA")})
         raise ValueError("Official sections B/C not found in expected order")
     ranges = {"B": text[b[-1].start():c[-1].start()],
               "C": text[c[-1].start():]}
