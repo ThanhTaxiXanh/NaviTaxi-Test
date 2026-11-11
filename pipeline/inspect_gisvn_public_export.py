@@ -68,6 +68,49 @@ def main():
     for match in list(re.finditer("GeoJSON", html, re.I))[:20]:
         part = re.sub(r"\s+", " ", html[max(0, match.start()-145):match.end()+165])
         snippets.append(part[:315])
+    # Read only source scripts that contain the public export handler.
+    handler = "taigeojson_tong_tuheader_SAUSAPNHAP"
+    probe_urls = [url]
+    probe_urls.extend(
+        urljoin(url, s) for s in parser.scripts
+        if urlsplit(urljoin(url, s)).hostname == "gis.vn"
+        and (s.endswith("navigation_left.js") or
+             s.endswith("GlobalFunction.js") or
+             "don-vi-hanh-chinh" in s)
+    )
+    code_contexts = []
+    for target in probe_urls[:5]:
+        try:
+            if target == url:
+                script_text = html
+            else:
+                with urlopen(Request(target, headers={
+                    "User-Agent": "NaviTaxi-GIS-SourceAudit/1.0",
+                }), timeout=20) as script_response:
+                    script_bytes = script_response.read(2 * 1024 * 1024 + 1)
+                if len(script_bytes) > 2 * 1024 * 1024:
+                    continue
+                script_text = script_bytes.decode("utf-8", errors="replace")
+            patterns = [
+                r"function\\s+" + handler + r"\\s*\\(",
+                r"(?:window\\.)?" + handler + r"\\s*=\\s*(?:async\\s*)?function",
+                r"(?:window\\.)?" + handler + r"\\s*=\\s*(?:async\\s*)?\\(",
+            ]
+            matches = [
+                match for pattern in patterns
+                for match in re.finditer(pattern, script_text, re.I)
+            ]
+            for match in matches[:3]:
+                code_contexts.append({
+                    "source_url": target,
+                    "function_snippet": script_text[
+                        max(0, match.start()-90): match.start()+2500
+                    ],
+                })
+        except Exception as exc:
+            code_contexts.append({
+                "source_url": target, "error_type": type(exc).__name__
+            })
     result = {
         "status": "PUBLIC_PAGE_INSPECTED", "page": url,
         "http": status, "content_type": kind, "html_bytes": len(data),
@@ -79,6 +122,7 @@ def main():
             urljoin(url, href) for href, _ in parser.links
             if re.search(r"terms|license|điều.khoản|ban.quyen", href, re.I)
         ][:20],
+        "public_export_handler_source": code_contexts,
         "source_data_downloaded": False,
         "gisvn_redistribution_permission_verified": False,
     }
