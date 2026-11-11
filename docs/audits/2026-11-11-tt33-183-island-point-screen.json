@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "status": "OFFICIAL_TT33_2024_POINT_SCREEN_COMPLETE_BUT_BOUNDARY_UNVERIFIED",
+  "p0_pass": false,
+  "maplibre_activation_allowed": false,
+  "source_reference_url": "https://mae.gov.vn/noidung/Lists/VBQPPL/Attachments/514/1_DanhMuc_TT_DiaDanh_BanHanh.pdf",
+  "source_reference_pdf_sha256": "acde9b561eca24312b81efdcb36a22a8fc74e2dcb431f6c206199ef72c98e841",
+  "source_coordinate_system": "VN-2000, numerically compared with WGS84 without verified datum transformation",
+  "user_zip_sha256": "51779d2585600ec053827a60890ba61cd2192f19b5ee153d38be18a2611d24cd",
+  "source_provinces": [
+    {
+      "code": "48",
+      "name": "Đà Nẵng",
+      "reference_points": 50,
+      "source_polygon_components": 32,
+      "inside": 34,
+      "inside_or_within_2km": 36,
+      "outside_5km": 7
+    },
+    {
+      "code": "56",
+      "name": "Khánh Hòa",
+      "reference_points": 133,
+      "source_polygon_components": 393,
+      "inside": 107,
+      "inside_or_within_2km": 120,
+      "outside_5km": 7
+    }
+  ],
+  "points_checked": 183,
+  "inside_source_polygon": 141,
+  "inside_or_within_2km": 156,
+  "outside_2km": 27,
+  "outside_5km": 14,
+  "outside_10km": 11,
+  "qa_thresholds_not_legal_boundary_tolerances": true,
+  "review_candidates_over_5km": [
+    {
+      "reference_id": "C128",
+      "name": "Đá Vĩnh Tường",
+      "province": "Khánh Hòa",
+      "distance_km_approx": 73.697,
+      "kind": "reef_or_shoal"
+    },
+    {
+      "reference_id": "B48",
+      "name": "Đảo Tri Tôn",
+      "province": "Đà Nẵng",
+      "distance_km_approx": 58.95,
+      "kind": "named_island"
+    },
+    {
+      "reference_id": "C131",
+      "name": "Đá Đồng Thanh",
+      "province": "Khánh Hòa",
+      "distance_km_approx": 56.124,
+      "kind": "reef_or_shoal"
+    },
+    {
+      "reference_id": "C129",
+      "name": "Bãi ngầm Nguyệt Xương",
+      "province": "Khánh Hòa",
+      "distance_km_approx": 46.937,
+      "kind": "submerged"
+    },
+    {
+      "reference_id": "B49",
+      "name": "Bãi ngầm Ốc Tai Voi",
+      "province": "Đà Nẵng",
+      "distance_km_approx": 38.939,
+      "kind": "submerged"
+    },
+    {
+      "reference_id": "C123",
+      "name": "Đảo An Bang",
+      "province": "Khánh Hòa",
+      "distance_km_approx": 38.77,
+      "kind": "named_island"
+    },
+    {
+      "reference_id": "C71",
+      "name": "Đá Núi Mon",
+      "province": "Khánh Hòa",
+      "distance_km_approx": 25.563,
+      "kind": "reef_or_shoal"
+    },
+    {
+      "reference_id": "B39",
+      "name": "Bãi cạn Gò Nổi",
+      "province": "Đà Nẵng",
+      "distance_km_approx": 21.496,
+      "kind": "reef_or_shoal"
+    },
+    {
+      "reference_id": "B50",
+      "name": "Quần đảo Hoàng Sa (nhãn)",
+      "province": "Đà Nẵng",
+      "distance_km_approx": 20.024,
+      "kind": "region_label"
+    },
+    {
+      "reference_id": "C109",
+      "name": "Đá Châu Viên",
+      "province": "Khánh Hòa",
+      "distance_km_approx": 19.323,
+      "kind": "reef_or_shoal"
+    },
+    {
+      "reference_id": "B15",
+      "name": "Đảo Bạch Quy",
+      "province": "Đà Nẵng",
+      "distance_km_approx": 17.712,
+      "kind": "named_island"
+    },
+    {
+      "reference_id": "B37",
+      "name": "Bãi Thủy Tề Nam nhỏ",
+      "province": "Đà Nẵng",
+      "distance_km_approx": 7.985,
+      "kind": "reef_or_shoal"
+    },
+    {
+      "reference_id": "B3",
+      "name": "Đảo Quang Ảnh",
+      "province": "Đà Nẵng",
+      "distance_km_approx": 7.013,
+      "kind": "named_island"
+    },
+    {
+      "reference_id": "C122",
+      "name": "Bãi ngầm Ngũ Phụng",
+      "province": "Khánh Hòa",
+      "distance_km_approx": 6.989,
+      "kind": "submerged"
+    }
+  ],
+  "verification_matrix": {
+    "province_34_names_and_codes": "MATCHED_PRIOR_INTAKE_QA",
+    "source_polygon_internal_validity": "PASS_34_SHAPELY",
+    "official_island_name_points": "ALL_183_PROXIMITY_SCREENED",
+    "official_coordinate_datum_transform": "NOT_VERIFIED",
+    "official_island_reef_polygon_geometries": "NOT_OBTAINED",
+    "official_2025_province_boundary_vectors": "NOT_OBTAINED",
+    "official_national_or_maritime_border_vectors": "NOT_OBTAINED",
+    "source_redistribution_rights": "NOT_VERIFIED",
+    "maplibre_activation": "BLOCKED"
+  },
+  "limitations": [
+    "The circular gives official place-name reference POINTS, not official shoreline or island/reef polygon boundaries.",
+    "Submerged features and group-label points need not lie within exposed-land polygons.",
+    "Provincial MultiPolygons may represent generalized administrative zones; not all feature components are physical land.",
+    "No independent VN-2000 -> WGS84 datum transformation was applied; km thresholds are screening diagnostics only.",
+    "A 2025 authoritative vector boundary dataset and legally grounded maritime line source are still absent.",
+    "No right to redistribute user's GIS.vn GeoJSON has been verified."
+  ]
+}
