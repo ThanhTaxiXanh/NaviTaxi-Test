@@ -104,6 +104,10 @@ def main():
     print("OFFICIAL_POINT_COUNT=" + str(len(data)))
     print("OFFICIAL_PDF_SHA256=" + record["pdf_sha256"])
     print("OFFICIAL_POINTS_B64_ZLIB=" + encoded)
+    # Lightweight point IDs/coordinate seconds for independent local polygon
+    # screening. No authoritative boundary polygons can be inferred.
+    pairs = ";".join(f"{p[0]}{p[1]}:{p[3]},{p[4]}" for p in data)
+    print("OFFICIAL_POINT_PAIRS=" + pairs)
     return 0
 
 
