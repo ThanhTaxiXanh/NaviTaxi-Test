@@ -63,6 +63,48 @@ class Province34IntakeTests(unittest.TestCase):
         with self.assertRaises(ProvinceIntakeError):
             inspect_collection(json.dumps(data).encode(), "name")
 
+
+    def test_zip_34_one_feature_geojson_members_supported(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "34provinces.zip"
+            feature_list = synthetic(name_field="ten_tinh")["features"]
+            with ZipFile(path, "w") as zipped:
+                for idx, feature in enumerate(feature_list):
+                    feature["properties"]["ma_tinh"] = str(idx + 1).zfill(2)
+                    zipped.writestr(
+                        f"data/province_{idx}.geojson",
+                        json.dumps({"type": "FeatureCollection",
+                                    "features": [feature]}),
+                    )
+                    zipped.writestr(
+                        f"__MACOSX/data/._province_{idx}.geojson", b"metadata"
+                    )
+            report = audit_file(path)
+            self.assertEqual(report["inspection"]["feature_count"], 34)
+            self.assertEqual(report["inspection"]["name_field"], "ten_tinh")
+            self.assertEqual(
+                report["geojson_member"],
+                "34_separate_GeoJSON_members_merged_in_memory",
+            )
+            self.assertEqual(report["p0_status"], "BLOCKED")
+            self.assertFalse(report["maplibre_activation_allowed"])
+
+    def test_33_individual_files_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "incomplete.zip"
+            features = synthetic(33, "ten_tinh")["features"]
+            with ZipFile(path, "w") as zipped:
+                for idx, feature in enumerate(features):
+                    feature["properties"]["ma_tinh"] = str(idx + 1).zfill(2)
+                    zipped.writestr(
+                        f"province_{idx}.geojson",
+                        json.dumps({"type": "FeatureCollection",
+                                    "features": [feature]}),
+                    )
+            report = audit_file(path)
+            self.assertEqual(report["status"], "INTAKE_FAILED")
+            self.assertEqual(report["p0_status"], "BLOCKED")
+
     def test_zip_path_traversal_refused(self):
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / "unsafe.zip"

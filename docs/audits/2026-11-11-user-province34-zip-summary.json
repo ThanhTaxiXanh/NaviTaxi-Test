@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "document_type": "USER_UPLOADED_GIS_VN_CANDIDATE_STRUCTURAL_QA",
+  "input_filename": "GeoJSON 34 Tinh VN.zip",
+  "zip_sha256": "51779d2585600ec053827a60890ba61cd2192f19b5ee153d38be18a2611d24cd",
+  "zip_bytes": 8790000,
+  "archive_crc": "PASS",
+  "geojson_file_count": 34,
+  "ignored_macos_metadata_files": 34,
+  "feature_count": 34,
+  "geometry_types": {
+    "MultiPolygon": 34
+  },
+  "matched_current_province_names_and_codes": 34,
+  "checked_vertices": 1312216,
+  "checked_polygon_rings": 2707,
+  "all_individual_polygon_geometries_valid": true,
+  "provincial_polygon_area_overlaps_gt_1e_minus_9_sq_degree": 0,
+  "shapely_topology_review_performed": true,
+  "pyproj_wgs84_area_review_performed": true,
+  "flagged_area_mismatches": [
+    {
+      "code": "56",
+      "province": "Khánh Hòa",
+      "geodesic_area_km2": 11954.14,
+      "property_area_km2": 8556.1,
+      "difference_pct": 39.71
+    },
+    {
+      "code": "96",
+      "province": "Cà Mau",
+      "geodesic_area_km2": 7586.28,
+      "property_area_km2": 6310.45,
+      "difference_pct": 20.22
+    }
+  ],
+  "flagged_remote_polygon_components": [
+    {
+      "code": "48",
+      "province": "Đà Nẵng",
+      "remotely_located_components": 18,
+      "components_over_25_km2": 10,
+      "max_component_area_km2": 120.24
+    },
+    {
+      "code": "56",
+      "province": "Khánh Hòa",
+      "remotely_located_components": 300,
+      "components_over_25_km2": 32,
+      "max_component_area_km2": 316.08
+    }
+  ],
+  "review_limitations": [
+    "Not an official or authoritative Vietnamese boundary comparison",
+    "No website source license/version/redistribution terms established from ZIP",
+    "Offshore administrative polygons cannot be assumed to represent physical islands",
+    "No maritime GIS reference overlay, MapLibre rendering or Android screenshot P0 review"
+  ],
+  "disposition": "QUARANTINE_GEOMETRY_HUMAN_REVIEW_REQUIRED_NOT_P0",
+  "maplibre_activation_allowed": false,
+  "p0_pass": false
+}

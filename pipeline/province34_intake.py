@@ -61,16 +61,55 @@ def _read_geojson_bytes(path: Path) -> tuple[bytes, str]:
                 and item.filename.lower().endswith((".geojson", ".json"))
                 and not item.filename.startswith("__MACOSX/")
             ]
-            if len(candidates) != 1:
+            if len(candidates) not in (1, PROVINCE_COUNT):
                 raise ProvinceIntakeError(
-                    "ZIP must contain exactly one GeoJSON; first convert SHP/KML/GPKG"
+                    "ZIP must contain one 34-feature GeoJSON or 34 single-province GeoJSON files"
                 )
-            member = candidates[0]
-            with z.open(member) as stream:
-                raw = stream.read(MAX_BYTES + 1)
-            if len(raw) > MAX_BYTES:
-                raise ProvinceIntakeError("Uncompressed GeoJSON exceeds 256 MiB")
-            return raw, member.filename
+            if len(candidates) == 1:
+                member = candidates[0]
+                with z.open(member) as stream:
+                    raw = stream.read(MAX_BYTES + 1)
+                if len(raw) > MAX_BYTES:
+                    raise ProvinceIntakeError("Uncompressed GeoJSON exceeds 256 MiB")
+                return raw, member.filename
+
+            # GIS.vn exports one FeatureCollection with one MultiPolygon for
+            # each province. Ignore macOS resource-fork files; DO NOT extract.
+            features = []
+            unpacked_bytes = 0
+            for member in candidates:
+                unpacked_bytes += member.file_size
+                if unpacked_bytes > MAX_BYTES:
+                    raise ProvinceIntakeError("ZIP expands beyond 256 MiB safety limit")
+                with z.open(member) as stream:
+                    payload = stream.read(member.file_size + 1)
+                if len(payload) != member.file_size:
+                    raise ProvinceIntakeError("Truncated GeoJSON member")
+                try:
+                    item = json.loads(payload)
+                except (ValueError, UnicodeDecodeError) as exc:
+                    raise ProvinceIntakeError("Malformed provincial GeoJSON") from exc
+                if (not isinstance(item, dict) or
+                        item.get("type") != "FeatureCollection" or
+                        "crs" in item or
+                        not isinstance(item.get("features"), list) or
+                        len(item["features"]) != 1):
+                    raise ProvinceIntakeError(
+                        "Expected one WGS84 GeoJSON feature per province file"
+                    )
+                feature = item["features"][0]
+                if (not isinstance(feature, dict) or
+                        feature.get("type") != "Feature" or
+                        not isinstance(feature.get("properties"), dict) or
+                        not isinstance(feature["properties"].get("ten_tinh"), str) or
+                        not isinstance(feature["properties"].get("ma_tinh"), str)):
+                    raise ProvinceIntakeError("Missing ten_tinh/ma_tinh in province file")
+                features.append(feature)
+            raw = json.dumps(
+                {"type": "FeatureCollection", "features": features},
+                ensure_ascii=False, separators=(",", ":")
+            ).encode("utf-8")
+            return raw, "34_separate_GeoJSON_members_merged_in_memory"
     except (BadZipFile, EOFError, RuntimeError) as exc:
         raise ProvinceIntakeError("Broken or unreadable GeoJSON ZIP") from exc
 
@@ -229,6 +268,10 @@ def audit_file(path: Path, *, name_field: str = "name",
     }
     try:
         raw, inside_name = _read_geojson_bytes(path)
+        if (inside_name == "34_separate_GeoJSON_members_merged_in_memory"
+                and name_field == "name"):
+            # The provider's actual field is ten_tinh, not name.
+            name_field = "ten_tinh"
         report = inspect_collection(raw, name_field)
         result.update({
             "status": "QUARANTINED_34_PROVINCES_STRUCTURAL_CHECK_NOT_P0",

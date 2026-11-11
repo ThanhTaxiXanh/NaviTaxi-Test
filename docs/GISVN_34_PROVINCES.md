@@ -49,3 +49,38 @@ ranh giới, quyền tái sử dụng dữ liệu gis.vn, địa giới biển �
 - Workflow `GIS.vn official public GeoJSON button probe` chỉ lưu `inspection.json`, **không lưu hoặc công bố dữ liệu chưa rõ quyền tái sử dụng**.
 - Danh mục 34 tỉnh được đối chiếu bằng **tên và mã** theo Quyết định 19/2025/QĐ-TTg (nguồn: https://baochinhphu.vn/chi-dao-dieu-hanh-cua-chinh-phu-thu-tuong-chinh-phu-ngay-4-7-2025-1-102250704190956567.htm). Đây chỉ là kiểm tra tên và mã, không thay thế ranh giới GIS chính thức.
 - Do chưa có tệp tải và chưa xác minh điều khoản cấp phép, **không đưa GeoJSON vào tài sản Flutter và không bật MapLibre**.
+
+## Kiểm tra ZIP thực tế người dùng cung cấp ngày 11/11/2026
+
+Người dùng đã gửi `GeoJSON 34 Tinh VN.zip` (SHA-256
+`51779d2585600ec053827a60890ba61cd2192f19b5ee153d38be18a2611d24cd`).
+Tệp chứa **34 GeoJSON riêng biệt**, mỗi tệp một MultiPolygon tỉnh/thành,
+cộng 34 tệp `__MACOSX` chỉ chứa metadata. Không có lỗi ZIP CRC.
+Bộ nhập `pipeline.province34_intake` nay đọc trực tiếp kiểu ZIP này mà
+không giải nén ra đĩa. Trường tên mặc định tự chọn `ten_tinh` khi nhập ZIP
+34 GeoJSON của nhà cung cấp, không giả định trường `name`.
+
+QA độc lập đã kiểm tra 1.312.216 tọa độ đỉnh trên 2.707 vòng polygon.
+34 tên/mã khớp danh mục Chính phủ 2025; Shapely xác nhận 34 hình học hợp lệ,
+không thấy vùng chồng diện tích đáng kể giữa các đơn vị.
+
+**Cảnh báo định lượng:** diện tích trắc địa WGS84 tính từ hình học Khánh Hòa
+là khoảng **11.954 km²**, nhưng thuộc tính `dtich_km2` ghi **8.556,10 km²**
+(chênh +39,71%); Cà Mau là khoảng **7.586 km²** so với thuộc tính
+**6.310,45 km²** (+20,22%). Các thành phần polygon xa bờ của Đà Nẵng và
+Khánh Hòa có những vùng đơn lẻ từ hàng chục đến hơn 300 km². Chúng có thể
+biểu diễn vùng hành chính/đảo theo cách tổng quát hóa; **không được coi
+là diện tích đất đảo thật hoặc ranh giới biển đã xác minh**.
+
+Báo cáo metadata kiểm định (không chứa hình học gốc) được lưu ở
+`docs/audits/2026-11-11-user-province34-zip-summary.json`.
+Tệp GeoJSON gốc và bản ghép **không được commit lên Git** vì chưa xác minh
+được ngày công bố, căn cứ và quyền phân phối lại từ gis.vn.
+Chốt chặn bản đồ **P0 BLOCKED** và không kích hoạt nguồn MapLibre.
+
+Chạy bằng lệnh:
+
+```bash
+python -m pipeline.province34_intake 'GeoJSON 34 Tinh VN.zip' --report audit-output/gisvn-34-source.json
+python -m pipeline.province34_name_review audit-output/gisvn-34-source.json
+```
