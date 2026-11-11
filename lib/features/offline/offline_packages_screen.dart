@@ -4,7 +4,8 @@ import 'package:flutter/services.dart';
 import '../../platform/android_storage_bridge.dart';
 import 'offline_package.dart';
 
-/// Developer-only intake dashboard; no unapproved archive is rendered.
+/// User-file PMTiles intake for DEBUG-only local GIS review. Production P0
+/// remains blocked even after every hash matches.
 class OfflinePackagesScreen extends StatefulWidget {
   const OfflinePackagesScreen({
     super.key,
@@ -73,7 +74,8 @@ class _OfflinePackagesScreenState extends State<OfflinePackagesScreen> {
         final result = await widget.storage.importArchive(archive.filename);
         if (result == null) return 'Đã hủy chọn tệp.';
         return result
-            ? 'SHA-256 khớp. Dữ liệu được cách ly, chưa được phép hiển thị.'
+            ? 'SHA-256 khớp. Bạn có thể mở lớp đường/POI khi quay lại '
+                'bản đồ GIS DEBUG. P0 vẫn chưa được duyệt.'
             : 'Không thể xác nhận checksum của dữ liệu.';
       });
 
@@ -168,9 +170,11 @@ class _OfflinePackagesScreenState extends State<OfflinePackagesScreen> {
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       SizedBox(height: 8),
                       Text(
-                        'Chỉ nhập và kiểm tra tệp PMTiles đã cung cấp. '
-                        'Mọi gói đều được cách ly, không đưa lên bản đồ cho '
-                        'đến khi kiểm chứng GIS, giấy phép và ảnh Android đạt P0.',
+                        'Chọn đúng tệp PMTiles đã cung cấp. '
+                        'Các gói sẽ được kiểm tra SHA-256 và lưu riêng. '
+                        'Chỉ màn hình GIS DEBUG được hiển thị đường, '
+                        'công trình và POI sau xác minh. '
+                        'Bản đồ chính thức vẫn bị chặn P0.',
                       ),
                     ],
                   ),
@@ -232,8 +236,10 @@ class _OfflinePackagesScreenState extends State<OfflinePackagesScreen> {
               const Padding(
                 padding: EdgeInsets.all(8),
                 child: Text(
-                  'Chưa hỗ trợ tải qua Internet, chạy bản đồ từ PMTiles, '
-                  'hoặc chuyển online/offline tự động.',
+                  'Quay lại bản đồ MapLibre GIS sau khi nhập để thấy '
+                  'các lớp PMTiles offline. Chưa có tải tự động, '
+                  'định tuyến hoặc phát hành bản đồ chính thức. '
+                  'Nguồn: © OpenStreetMap contributors / HOT.',
                 ),
               ),
             ],
