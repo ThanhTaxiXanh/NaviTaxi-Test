@@ -1,0 +1,28 @@
+name: Quarantined GeoPackage review tool
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'pipeline/province34_review_gpkg.py'
+      - 'pipeline/requirements-review-gpkg.txt'
+      - 'tests/sovereignty/test_province34_review_gpkg.py'
+      - '.github/workflows/province34-review-gpkg.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-quarantine-builder:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned standalone GIS runtime
+        run: python -m pip install -r pipeline/requirements-review-gpkg.txt
+      - name: Check GeoPackage roundtrip and synthetic safety gates
+        run: python -m unittest tests.sovereignty.test_province34_review_gpkg -v
