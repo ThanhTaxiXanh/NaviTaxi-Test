@@ -27,9 +27,11 @@ jobs:
         run: pip install -r pipeline/requirements-context-gis.txt
       - name: Generate physical GIS layers under quarantine
         run: python -m pipeline.generate_physical_context --output-dir build/physical_context
+      - name: Bundle LGPL notices for downstream reviewers
+        run: python -m pipeline.bundle_context_licenses --output-dir build/physical_context/LICENSES
       - name: Independently validate SHA-256, geometry and fail-closed manifest
         run: |
-          python -m pipeline.verify_physical_context build/physical_context             --expected-manifest assets/geo/physical_context_candidate_manifest.json             --report build/physical_context/validation_report.json
+          python -m pipeline.verify_physical_context build/physical_context --expected-manifest assets/geo/physical_context_candidate_manifest.json --report build/physical_context/validation_report.json
       - name: Attach draft geodata for manual review (NOT A RELEASE)
         uses: actions/upload-artifact@v4
         with:

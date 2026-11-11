@@ -32,3 +32,6 @@ __pycache__/
 
 # Transient GIS scan checkpoints / unreviewed feature diagnostics
 audit-output/
+
+# Candidate GIS outputs must remain outside Flutter map sources
+data/candidates/
