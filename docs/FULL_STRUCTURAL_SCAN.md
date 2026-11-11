@@ -30,10 +30,12 @@ polygon counts, geometry vertices, paths and name fields.
 
 The machine-readable result is at
 `docs/audits/2026-11-11-all-archives-full-structural-scan.json`.
-The local C++ prototype's source and binary hashes are included in that
-record for provenance; this prototype is **not** a certified release tool.
-The repository's reproducible Python `spatial_batch_runner.py` and chunk
-merger remain the primary independent audit implementation.
+The exact C++17/zlib prototype source is committed at `tools/native_mvt_scan.cpp`.
+Its source and locally compiled binary hashes are recorded in the JSON report.
+GitHub CI recompiles the source and verifies its SHA-256 and fail-closed
+synthetic PMTiles tests; native compilation is **not** sovereign approval.
+The Python `spatial_batch_runner.py` and chunk merger remain the primary
+independent audit implementation.
 
 Two native substring hints were found in the full POI archive: English and
 Latin name properties for one viewpoint named `View of the South China Sea`.
@@ -54,3 +56,15 @@ that those archives contain no problematic strings or geometries.
 The archives remain quarantined and the independent release validator must
 continue to fail closed. Do not mark P0 PASS on the basis of this report.
 
+
+## Reproduce using the native diagnostic scanner
+
+```bash
+mkdir -p build
+g++ -std=c++17 -O3 tools/native_mvt_scan.cpp -lz -o build/native-mvt-scan
+build/native-mvt-scan /path/to/hotosm_vnm_roads_osm.pmtiles roads > /tmp/roads-native.json
+build/native-mvt-scan /path/to/hotosm_vnm_buildings_osm.pmtiles buildings > /tmp/buildings-native.json
+build/native-mvt-scan /path/to/hotosm_vnm_points_of_interest_osm.pmtiles points_of_interest > /tmp/poi-native.json
+```
+
+This prototype requires a C++17 compiler and zlib development headers. It produces structural diagnostics with no P0 approval, and a narrower string-alert filter than the Python policy scanner. Do not use its output as evidence of valid international boundaries or safe release.
