@@ -52,9 +52,8 @@ class _GisReviewScreenState extends State<GisReviewScreen> {
                   Text('GeoPackage kiểm tra dữ liệu',
                        style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 8),
-                  Text('Đã kiểm tra: ' + report.provinceCount.toString() + '/34 tỉnh/thành'),
-                  Text('Thành phần xa bờ cần rà soát: ' +
-                       report.offshoreCount.toString()),
+                  Text('Đã kiểm tra: ${report.provinceCount}/34 tỉnh/thành'),
+                  Text('Thành phần xa bờ cần rà soát: ${report.offshoreCount}'),
                   const Text('Hình học trong gói rà soát đã đối chiếu trùng với nguồn.'),
                   const SizedBox(height: 8),
                   const Text(
@@ -69,10 +68,10 @@ class _GisReviewScreenState extends State<GisReviewScreen> {
             for (final region in report.reviewRegions)
               Card(child: ListTile(
                 leading: const Icon(Icons.layers_outlined),
-                title: Text(region.name + ' (mã ' + region.code + ')'),
+                title: Text('${region.name} (mã ${region.code})'),
                 subtitle: Text(
-                  region.count.toString() + ' đa giác xa bờ; ' +
-                  region.largeCount.toString() + ' vùng trên 25 km²'
+                  '${region.count} đa giác xa bờ; '
+                  '${region.largeCount} vùng trên 25 km²'
                 ),
               )),
             const SizedBox(height: 12),
@@ -86,8 +85,8 @@ class _GisReviewScreenState extends State<GisReviewScreen> {
               ),
             const Divider(),
             SelectableText(
-              'SHA-256 ZIP: ' + report.sourceSha256 + '\n' +
-              'SHA-256 GeoPackage: ' + report.packageSha256,
+              'SHA-256 ZIP: ${report.sourceSha256}\n'
+              'SHA-256 GeoPackage: ${report.packageSha256}',
               style: const TextStyle(fontSize: 11),
             ),
             const SizedBox(height: 12),
