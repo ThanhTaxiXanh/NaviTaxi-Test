@@ -42,6 +42,17 @@ class AndroidStorageBridge {
         result?['p0Approved'] == false;
   }
 
+  /// Returns ONLY archives rehashed against the fixed catalog by Kotlin
+  /// in a debuggable Android app. Never a P0 map-release authorization.
+  Future<Map<String, String>> getVerifiedArchivePathsDebug() async {
+    final value = await channel.invokeMapMethod<String, String>(
+      'getVerifiedArchivePathsDebug',
+    );
+    return Map<String, String>.unmodifiable(
+      value ?? const <String, String>{},
+    );
+  }
+
   Future<bool> deleteImported(String filename) async =>
       await channel.invokeMethod<bool>(
         'deleteImported',
