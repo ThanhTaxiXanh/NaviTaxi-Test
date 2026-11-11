@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'review_map_data.dart';
+import 'review_maplibre_screen.dart';
 
 /// A fully offline, debug-only GIS geometry preview.
 /// Does not touch MapLibre's approved style and does not enable routing.
@@ -66,6 +67,15 @@ class _ReviewMapScreenState extends State<ReviewMapScreen> {
         appBar: AppBar(
           title: const Text('NaviTaxi • Xem trước GIS'),
           actions: [
+            IconButton(
+              tooltip: 'Kiểm thử bản đồ MapLibre',
+              icon: const Icon(Icons.layers_outlined),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const ReviewMaplibreScreen(),
+                ),
+              ),
+            ),
             IconButton(
               tooltip: 'Phóng to',
               icon: const Icon(Icons.add),
