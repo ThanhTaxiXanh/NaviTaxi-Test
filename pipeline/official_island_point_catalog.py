@@ -30,13 +30,13 @@ def extract_points(pdf_path: Path):
         if result.returncode:
             raise ValueError("PDF text extraction failed: " + result.stderr[:200])
         text = text_path.read_text(encoding="utf-8")
-    b = list(re.finditer(r"(?m)^\s*B\s+QUẦN ĐẢO HOÀNG\s+SA\b", text))
-    c = list(re.finditer(r"(?m)^\s*C\s+QUẦN ĐẢO TRƯỜNG\s+SA\b", text))
-    if not b or not c or b[-1].start() >= c[-1].start():
-        print("HEADING_QA", {"B":len(b),"C":len(c),"sample":repr(text[-16000:-14000]),"h":text.rfind("HOÀNG SA"),"t":text.rfind("TRƯỜNG SA")})
-        raise ValueError("Official sections B/C not found in expected order")
-    ranges = {"B": text[b[-1].start():c[-1].start()],
-              "C": text[c[-1].start():]}
+    # Section headings are split across columns/lines by pdftotext. The
+    # unique numbered map-sheet headers remain stable through layout export.
+    h = text.rfind("Tờ số 250-01")
+    t = text.rfind("Tờ số 250-05")
+    if h < 0 or t <= h:
+        raise ValueError("Official Hoang Sa/Truong Sa map sheet headers not found")
+    ranges = {"B": text[h:t], "C": text[t:]}
     points = []
     for section, block in ranges.items():
         province, required = PROVINCES[section]
