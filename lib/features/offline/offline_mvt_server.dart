@@ -30,6 +30,8 @@ class OfflineMvtServer {
   late final StreamSubscription<HttpRequest> _subscription;
 
   int get sourceCount => _archives.length;
+  Iterable<String> get enabledKinds => _archives.keys;
+
 
   String tileTemplate(String source) {
     if (!_archives.containsKey(source)) {
