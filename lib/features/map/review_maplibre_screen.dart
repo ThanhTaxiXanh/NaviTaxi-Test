@@ -140,7 +140,9 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
         labels.map((label) => LatLng(label.latitude, label.longitude)),
       );
       if (!mounted || _controller != controller ||
-          pixels.length != labels.length) return;
+          pixels.length != labels.length) {
+        return;
+      }
 
       final accepted = <_ProjectedLabel>[];
       final occupied = <String>{};
