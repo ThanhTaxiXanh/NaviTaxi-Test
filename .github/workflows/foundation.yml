@@ -14,6 +14,15 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m unittest discover -s tests/sovereignty -v
+      - name: Report risk-based territorial map acceptance gaps (not P0)
+        run: python -m pipeline.map_display_acceptance --output build/qa/map-acceptance-review.json
+      - name: Archive read-only territorial review status
+        uses: actions/upload-artifact@v4
+        with:
+          name: navitaxi-map-acceptance-review-NOT-P0
+          path: build/qa/map-acceptance-review.json
+          if-no-files-found: error
+          retention-days: 7
       - name: Confirm unapproved release is blocked
         run: |
           if python pipeline/vietnam_sovereignty_validator.py --repo-root . --mode release; then
