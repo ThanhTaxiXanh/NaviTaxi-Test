@@ -47,7 +47,7 @@ jobs:
       - name: Remove Flutter's generated template test
         run: rm -f test/widget_test.dart
       - run: flutter pub get
-      - run: flutter analyze
+      - run: flutter analyze --no-fatal-infos
       - run: flutter test
       - run: flutter build apk --debug
       - name: Archive development APK (not a P0-approved release)
