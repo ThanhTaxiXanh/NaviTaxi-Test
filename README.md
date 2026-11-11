@@ -43,3 +43,5 @@ See [34-province GIS source intake](docs/GISVN_34_PROVINCES.md), [candidate GIS 
 - [Fail-closed P0 binding at Flutter runtime](docs/P0_RUNTIME_ACTIVATION.md): editing JSON or layer IDs alone cannot turn on unapproved tile sources.
 
 - [P0 offshore tile coverage: 0/183 official points covered by existing HOTOSM mainland PMTiles](docs/P0_OFFSHORE_TILE_COVERAGE.md). A separately reviewed island/sea tile source is still required.
+
+- [APK debug để người dùng duyệt bản đồ 34 tỉnh và biển đảo](docs/GIS_REVIEW_APK.md). Xem trước hình học tổng quát, không bật lớp MapLibre phát hành hoặc chuyển P0.

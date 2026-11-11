@@ -1,0 +1,55 @@
+name: Gis 34 province REVIEW APK (DEBUG ONLY, NOT P0)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'lib/app/app.dart'
+      - 'lib/features/map/review_map_screen.dart'
+      - 'lib/features/map/review_map_data.dart'
+      - 'assets/review/preview_geometry.b64'
+      - 'test/review_map_data_test.dart'
+      - '.github/workflows/gis-review-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-private-review-debug-apk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Generate Android scaffolding and resolve plugins
+        run: |
+          flutter create --platforms=android --project-name=navi_taxi_test --org=vn.navitaxi .
+          rm -f test/widget_test.dart
+          flutter pub get
+      - name: Verify all Flutter tests and analysis
+        run: |
+          flutter analyze
+          flutter test
+      - name: Build strictly debug REVIEW APK, P0 stays BLOCKED
+        run: flutter build apk --debug --dart-define=NAVITAXI_REVIEW_MODE=true
+      - name: Package distinct reviewer APK
+        run: |
+          cp build/app/outputs/flutter-apk/app-debug.apk build/app/outputs/flutter-apk/NaviTaxi_GIS_34Tinh_REVIEW_DEBUG_NOT_P0.apk
+          sha256sum build/app/outputs/flutter-apk/NaviTaxi_GIS_34Tinh_REVIEW_DEBUG_NOT_P0.apk > build/app/outputs/flutter-apk/REVIEW_APK_SHA256.txt
+      - name: Upload GIS review APK for manual phone inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: NaviTaxi-GIS-34Tinh-REVIEW-DEBUG-APK-NOT-P0
+          path: |
+            build/app/outputs/flutter-apk/NaviTaxi_GIS_34Tinh_REVIEW_DEBUG_NOT_P0.apk
+            build/app/outputs/flutter-apk/REVIEW_APK_SHA256.txt
+          retention-days: 14
+          if-no-files-found: error
