@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "status": "REVIEW_REQUIRED_NOT_P0",
+  "p0_pass": false,
+  "maplibre_activation_allowed": false,
+  "user_zip_sha256": "51779d2585600ec053827a60890ba61cd2192f19b5ee153d38be18a2611d24cd",
+  "map_image_sha256": "23153838a0214ad7f1526eed9d7bc74a1557cf0fe437ea2ddb088be43ac49fea",
+  "reference_repository": "nguyenduy1133/Free-GIS-Data",
+  "reference_commit": "ccb9f4ae992418bfeefd06da1eb42d0249632176",
+  "reference_geojson_sha256": "d8a06b4d3a0e5612ec3319afed4c75ff7ffc46e6ffd82e9e40df24090133a664",
+  "reference_features": 34,
+  "uniquely_matched_names": 33,
+  "bbox_iou_ge_099": 22,
+  "area_difference_le_1pct": 25,
+  "github_duplicate_label": "Lạng Sơn",
+  "github_missing_label": "Đồng Tháp",
+  "github_suspect_feature_index": 9,
+  "github_duplicate_feature_index": 19,
+  "github_suspect_bbox": [
+    105.18517,
+    10.1345,
+    106.82253,
+    10.97339
+  ],
+  "source_image_not_georeferenced": true,
+  "official_geometry_validation_completed": false,
+  "reviewed_islands": [
+    {
+      "province": "Đà Nẵng",
+      "component_count": 18,
+      "bbox": [
+        111.45145,
+        16.00768,
+        112.77734,
+        17.12112
+      ]
+    },
+    {
+      "province": "Khánh Hòa",
+      "component_count": 297,
+      "bbox": [
+        111.45269,
+        6.93106,
+        117.39326,
+        11.73241
+      ]
+    }
+  ],
+  "metadata_only": true,
+  "workflow_url": "https://github.com/ThanhTaxiXanh/NaviTaxi-Test/actions/runs/42948888241"
+}

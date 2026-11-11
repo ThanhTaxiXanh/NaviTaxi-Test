@@ -84,3 +84,7 @@ Chạy bằng lệnh:
 python -m pipeline.province34_intake 'GeoJSON 34 Tinh VN.zip' --report audit-output/gisvn-34-source.json
 python -m pipeline.province34_name_review audit-output/gisvn-34-source.json
 ```
+
+## Đối chiếu ba nguồn 34 tỉnh và biển đảo
+
+Đã so sánh ảnh bản đồ tháng 6/2025 với ZIP người dùng và bản `Provinces.geojson` tại một commit cố định của `nguyenduy1133/Free-GIS-Data`. Phát hiện lỗi trùng tên `Lạng Sơn` / thiếu `Đồng Tháp` trong GitHub và sai khác ngoài khơi. Đọc [kết quả đối chiếu chi tiết](GIS_34_PROVINCES_THREE_SOURCE_QA.md). P0 vẫn BLOCKED.
