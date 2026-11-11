@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "review_name": "14 offshore island-name point classification against source province boundaries",
+  "created_on": "2026-11-11",
+  "status": "ALL_14_CLASSIFIED_NOT_BOUNDARY_APPROVAL",
+  "original_source_zip_sha256": "51779d2585600ec053827a60890ba61cd2192f19b5ee153d38be18a2611d24cd",
+  "official_ministry_pdf_sha256": "acde9b561eca24312b81efdcb36a22a8fc74e2dcb431f6c206199ef72c98e841",
+  "method": "Local azimuthal equidistant nearest-source-MultiPolygon diagnostic; numeric VN-2000/WGS84 without certified datum transform",
+  "feature_counts": {
+    "named_island": 4,
+    "reef_or_shoal": 6,
+    "submerged_bank": 3,
+    "regional_label": 1
+  },
+  "island_points_independently_corroborated_within_1km": 4,
+  "non_land_or_label_classification_explained": 4,
+  "verified_island_or_reef_land_polygons": 0,
+  "official_boundary_verified": false,
+  "coordinate_transform_verified": false,
+  "source_redistribution_rights_verified": false,
+  "maplibre_activation_allowed": false,
+  "p0_pass": false,
+  "points": [
+    {
+      "id": "C128",
+      "name": "Đá Vĩnh Tường",
+      "feature_kind": "reef_or_shoal",
+      "approximate_distance_to_nearest_source_admin_polygon_km": 73.697,
+      "independent_reference_point_offset_km": null,
+      "disposition": "REEF_OR_SHOAL_EXPOSURE_AND_OUTLINE_UNVERIFIED",
+      "legal_border_verification": "NOT_VERIFIED",
+      "allowed_as_physical_land_polygon": false
+    },
+    {
+      "id": "B48",
+      "name": "Đảo Tri Tôn",
+      "feature_kind": "named_island",
+      "approximate_distance_to_nearest_source_admin_polygon_km": 58.95,
+      "independent_reference_point_offset_km": 0.128,
+      "disposition": "NAMED_ISLAND_POINT_CORROBORATED_BUT_OUTLINE_MISSING",
+      "legal_border_verification": "NOT_VERIFIED",
+      "allowed_as_physical_land_polygon": false
+    },
+    {
+      "id": "C131",
+      "name": "Đá Đồng Thanh",
+      "feature_kind": "reef_or_shoal",
+      "approximate_distance_to_nearest_source_admin_polygon_km": 55.896,
+      "independent_reference_point_offset_km": null,
+      "disposition": "REEF_OR_SHOAL_EXPOSURE_AND_OUTLINE_UNVERIFIED",
+      "legal_border_verification": "NOT_VERIFIED",
+      "allowed_as_physical_land_polygon": false
+    },
+    {
+      "id": "C129",
+      "name": "Bãi ngầm Nguyệt Xương",
+      "feature_kind": "submerged_bank",
+      "approximate_distance_to_nearest_source_admin_polygon_km": 46.937,
+      "independent_reference_point_offset_km": null,
+      "disposition": "NO_EXPOSED_LAND_POLYGON_EXPECTED",
+      "legal_border_verification": "NOT_VERIFIED",
+      "allowed_as_physical_land_polygon": false
+    },
+    {
+      "id": "B49",
+      "name": "Bãi ngầm Ốc Tai Voi",
+      "feature_kind": "submerged_bank",
+      "approximate_distance_to_nearest_source_admin_polygon_km": 38.939,
+      "independent_reference_point_offset_km": null,
+      "disposition": "NO_EXPOSED_LAND_POLYGON_EXPECTED",
+      "legal_border_verification": "NOT_VERIFIED",
+      "allowed_as_physical_land_polygon": false
+    },
+    {
+      "id": "C123",
+      "name": "Đảo An Bang",
+      "feature_kind": "named_island",
+      "approximate_distance_to_nearest_source_admin_polygon_km": 38.77,
+      "independent_reference_point_offset_km": 0.24,
+      "disposition": "NAMED_ISLAND_POINT_CORROBORATED_BUT_OUTLINE_MISSING",
+      "legal_border_verification": "NOT_VERIFIED",
+      "allowed_as_physical_land_polygon": false
+    },
+    {
+      "id": "C71",
+      "name": "Đá Núi Mon",
+      "feature_kind": "reef_or_shoal",
+      "approximate_distance_to_nearest_source_admin_polygon_km": 25.563,
+      "independent_reference_point_offset_km": null,
+      "disposition": "REEF_OR_SHOAL_EXPOSURE_AND_OUTLINE_UNVERIFIED",
+      "legal_border_verification": "NOT_VERIFIED",
+      "allowed_as_physical_land_polygon": false
+    },
+    {
+      "id": "B39",
+      "name": "Bãi cạn Gò Nổi",
+      "feature_kind": "reef_or_shoal",
+      "approximate_distance_to_nearest_source_admin_polygon_km": 21.496,
+      "independent_reference_point_offset_km": null,
+      "disposition": "REEF_OR_SHOAL_EXPOSURE_AND_OUTLINE_UNVERIFIED",
+      "legal_border_verification": "NOT_VERIFIED",
+      "allowed_as_physical_land_polygon": false
+    },
+    {
+      "id": "B50",
+      "name": "Quần đảo Hoàng Sa (nhãn)",
+      "feature_kind": "regional_label",
+      "approximate_distance_to_nearest_source_admin_polygon_km": 20.024,
+      "independent_reference_point_offset_km": null,
+      "disposition": "NAME_LABEL_POINT_NOT_LAND",
+      "legal_border_verification": "NOT_VERIFIED",
+      "allowed_as_physical_land_polygon": false
+    },
+    {
+      "id": "C109",
+      "name": "Đá Châu Viên",
+      "feature_kind": "reef_or_shoal",
+      "approximate_distance_to_nearest_source_admin_polygon_km": 19.323,
+      "independent_reference_point_offset_km": null,
+      "disposition": "REEF_OR_SHOAL_EXPOSURE_AND_OUTLINE_UNVERIFIED",
+      "legal_border_verification": "NOT_VERIFIED",
+      "allowed_as_physical_land_polygon": false
+    },
+    {
+      "id": "B15",
+      "name": "Đảo Bạch Quy",
+      "feature_kind": "named_island",
+      "approximate_distance_to_nearest_source_admin_polygon_km": 17.711,
+      "independent_reference_point_offset_km": 0,
+      "disposition": "NAMED_ISLAND_POINT_CORROBORATED_BUT_OUTLINE_MISSING",
+      "legal_border_verification": "NOT_VERIFIED",
+      "allowed_as_physical_land_polygon": false
+    },
+    {
+      "id": "B37",
+      "name": "Bãi Thủy Tề Nam nhỏ",
+      "feature_kind": "reef_or_shoal",
+      "approximate_distance_to_nearest_source_admin_polygon_km": 7.914,
+      "independent_reference_point_offset_km": null,
+      "disposition": "REEF_OR_SHOAL_EXPOSURE_AND_OUTLINE_UNVERIFIED",
+      "legal_border_verification": "NOT_VERIFIED",
+      "allowed_as_physical_land_polygon": false
+    },
+    {
+      "id": "B3",
+      "name": "Đảo Quang Ảnh",
+      "feature_kind": "named_island",
+      "approximate_distance_to_nearest_source_admin_polygon_km": 7.013,
+      "independent_reference_point_offset_km": 0.836,
+      "disposition": "NAMED_ISLAND_POINT_CORROBORATED_BUT_OUTLINE_MISSING",
+      "legal_border_verification": "NOT_VERIFIED",
+      "allowed_as_physical_land_polygon": false
+    },
+    {
+      "id": "C122",
+      "name": "Bãi ngầm Ngũ Phụng",
+      "feature_kind": "submerged_bank",
+      "approximate_distance_to_nearest_source_admin_polygon_km": 6.989,
+      "independent_reference_point_offset_km": null,
+      "disposition": "NO_EXPOSED_LAND_POLYGON_EXPECTED",
+      "legal_border_verification": "NOT_VERIFIED",
+      "allowed_as_physical_land_polygon": false
+    }
+  ],
+  "source_links": [
+    "https://mae.gov.vn/noidung/Lists/VBQPPL/Attachments/514/1_DanhMuc_TT_DiaDanh_BanHanh.pdf",
+    "https://soyte.danang.gov.vn/web/dng/-/ubnd-huy%E1%BB%87n-ho%C3%A0ng-sa",
+    "https://amti.csis.org/amboyna-cay/",
+    "https://cangvuhanghainhatrang.gov.vn/index.aspx?id=1801&page=detail"
+  ]
+}

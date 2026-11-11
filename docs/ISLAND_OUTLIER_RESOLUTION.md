@@ -51,3 +51,7 @@ python -m pipeline.resolve_island_reference_gaps '/path/to/GeoJSON 34 Tinh VN.zi
 
 **Kết luận cụ thể:** Những trường hợp bãi ngầm và điểm nhãn vùng được giải trình vì không cần polygon đất nổi; bốn đảo có nguồn xác nhận tọa độ cấp vùng; sáu đá/bãi được phân loại. Tuy nhiên **không một đa giác đất đảo hay đường biển nào được cấp phê duyệt từ phép đối chiếu điểm**. Các lớp hiển thị vẫn P0 BLOCKED.
 
+
+## Bảng kết quả đã lưu
+
+Bộ số liệu kiểm tra từ ZIP nguồn được chốt thành [báo cáo JSON 14 địa danh](audits/2026-11-11-14-island-outlier-resolution.json). Các tọa độ/phân loại không được sử dụng để suy đường bờ biển hoặc chủ quyền pháp lý. Bản GIS GeoPackage điểm EPSG:4756 và CSV là gói trao trực tiếp cho người dùng, không đóng gói vào ứng dụng.
