@@ -68,54 +68,49 @@ def main():
     for match in list(re.finditer("GeoJSON", html, re.I))[:20]:
         part = re.sub(r"\s+", " ", html[max(0, match.start()-145):match.end()+165])
         snippets.append(part[:315])
-    # Read only source scripts that contain the public export handler.
+    # Inspect only public JS served from gis.vn for the exact advertised
+    # onclick handler. No credentials, cookies, or private API scraping.
     handler = "taigeojson_tong_tuheader_SAUSAPNHAP"
-    probe_urls = [url]
-    probe_urls.extend(
-        urljoin(url, s) for s in parser.scripts
-        if urlsplit(urljoin(url, s)).hostname == "gis.vn"
-        and (s.endswith("navigation_left.js") or
-             s.endswith("GlobalFunction.js") or
-             "don-vi-hanh-chinh" in s)
-    )
+    scripts = [urljoin(url, src) for src in parser.scripts
+               if urlsplit(urljoin(url, src)).hostname == "gis.vn"]
     code_contexts = []
-    for target in probe_urls[:5]:
+    js_candidates = []
+    for target in [url, *scripts[:75]]:
         try:
             if target == url:
                 script_text = html
             else:
                 with urlopen(Request(target, headers={
                     "User-Agent": "NaviTaxi-GIS-SourceAudit/1.0",
-                }), timeout=20) as script_response:
-                    script_bytes = script_response.read(2 * 1024 * 1024 + 1)
-                if len(script_bytes) > 2 * 1024 * 1024:
+                }), timeout=15) as script_response:
+                    script_bytes = script_response.read(3 * 1024 * 1024 + 1)
+                if len(script_bytes) > 3 * 1024 * 1024:
                     continue
                 script_text = script_bytes.decode("utf-8", errors="replace")
-            patterns = [
-                r"function\s+" + handler + r"\s*\(",
-                r"(?:window\.)?" + handler + r"\s*=\s*(?:async\s*)?function",
-                r"(?:window\.)?" + handler + r"\s*=\s*(?:async\s*)?\(",
-            ]
-            matches = [
-                match for pattern in patterns
-                for match in re.finditer(pattern, script_text, re.I)
-            ]
-            for match in matches[:3]:
+            count = script_text.count(handler)
+            if count and target != url:
+                js_candidates.append({"source_url": target, "handler_occurrences": count})
+            if target == url:
+                # Inline onclick attribute doesn't define the function.
+                continue
+            for match in list(re.finditer(re.escape(handler), script_text))[:3]:
                 code_contexts.append({
                     "source_url": target,
                     "function_snippet": script_text[
-                        max(0, match.start()-90): match.start()+2500
+                        max(0, match.start()-180):match.start()+2300
                     ],
                 })
         except Exception as exc:
-            code_contexts.append({
-                "source_url": target, "error_type": type(exc).__name__
-            })
+            if "view-script" in target:
+                code_contexts.append({
+                    "source_url": target, "error_type": type(exc).__name__
+                })
     result = {
         "status": "PUBLIC_PAGE_INSPECTED", "page": url,
         "http": status, "content_type": kind, "html_bytes": len(data),
         "public_direct_download_links": safe_links[:40],
-        "scripts": [urljoin(url, src) for src in parser.scripts[:50]],
+        "scripts": [urljoin(url, src) for src in parser.scripts],
+        "js_files_containing_export_handler": js_candidates,
         "export_buttons": parser.buttons[:30],
         "geojson_markup_snippets": snippets,
         "license_or_terms_links": [
