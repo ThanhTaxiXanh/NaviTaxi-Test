@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "status": "NO_AUTHORIZED_OFFSHORE_DATUM_OPERATION",
+  "source_pdf_sha256": "acde9b561eca24312b81efdcb36a22a8fc74e2dcb431f6c206199ef72c98e841",
+  "source_datum_epsg": "EPSG:4756",
+  "comparison_datum_epsg": "EPSG:4326",
+  "pyproj_version": "3.7.2",
+  "official_points_reviewed": 183,
+  "transform_operations": [
+    {
+      "operation_description": "axis order change (2D) + VN-2000 to WGS 84 (2) + axis order change (2D)",
+      "area_of_use_name": "Vietnam - onshore.",
+      "area_of_use_bbox": [
+        102.14,
+        8.33,
+        109.53,
+        23.4
+      ],
+      "declared_scopes": [
+        "Academic research, not officially adopted."
+      ],
+      "epsg_accuracy_m_as_listed": 1,
+      "official_points_inside_area_of_use": 0,
+      "official_points_total": 183,
+      "displacement_min_m_diagnostic_only": 223.462,
+      "displacement_max_m_diagnostic_only": 225.629,
+      "displacement_average_m_diagnostic_only": 224.624,
+      "usable_as_approved_offshore_transform": false
+    },
+    {
+      "operation_description": "axis order change (2D) + VN-2000 to WGS 84 (1) + axis order change (2D)",
+      "area_of_use_name": "Vietnam - Mekong delta blocks DBSCL 02 and 03.",
+      "area_of_use_bbox": [
+        104.24,
+        9.35,
+        107.11,
+        11.04
+      ],
+      "declared_scopes": [
+        "Academic research, not officially adopted."
+      ],
+      "epsg_accuracy_m_as_listed": 1,
+      "official_points_inside_area_of_use": 0,
+      "official_points_total": 183,
+      "displacement_min_m_diagnostic_only": 224.036,
+      "displacement_max_m_diagnostic_only": 226.206,
+      "displacement_average_m_diagnostic_only": 225.211,
+      "usable_as_approved_offshore_transform": false
+    }
+  ],
+  "offshore_approved_transform_found": false,
+  "outlier_count": 14,
+  "outliers_remaining_beyond_5km_even_under_diagnostic_shift": 14,
+  "outlier_shift_sensitivity": [
+    {
+      "id": "B15",
+      "original_nearest_polygon_km_approx": 17.712,
+      "worst_case_remaining_distance_km_approx": 17.486,
+      "note": "Sensitivity bound only; transform not authorized offshore"
+    },
+    {
+      "id": "B3",
+      "original_nearest_polygon_km_approx": 7.013,
+      "worst_case_remaining_distance_km_approx": 6.787,
+      "note": "Sensitivity bound only; transform not authorized offshore"
+    },
+    {
+      "id": "B37",
+      "original_nearest_polygon_km_approx": 7.985,
+      "worst_case_remaining_distance_km_approx": 7.759,
+      "note": "Sensitivity bound only; transform not authorized offshore"
+    },
+    {
+      "id": "B39",
+      "original_nearest_polygon_km_approx": 21.496,
+      "worst_case_remaining_distance_km_approx": 21.27,
+      "note": "Sensitivity bound only; transform not authorized offshore"
+    },
+    {
+      "id": "B48",
+      "original_nearest_polygon_km_approx": 58.95,
+      "worst_case_remaining_distance_km_approx": 58.724,
+      "note": "Sensitivity bound only; transform not authorized offshore"
+    },
+    {
+      "id": "B49",
+      "original_nearest_polygon_km_approx": 38.939,
+      "worst_case_remaining_distance_km_approx": 38.713,
+      "note": "Sensitivity bound only; transform not authorized offshore"
+    },
+    {
+      "id": "B50",
+      "original_nearest_polygon_km_approx": 20.024,
+      "worst_case_remaining_distance_km_approx": 19.798,
+      "note": "Sensitivity bound only; transform not authorized offshore"
+    },
+    {
+      "id": "C109",
+      "original_nearest_polygon_km_approx": 19.323,
+      "worst_case_remaining_distance_km_approx": 19.097,
+      "note": "Sensitivity bound only; transform not authorized offshore"
+    },
+    {
+      "id": "C122",
+      "original_nearest_polygon_km_approx": 6.989,
+      "worst_case_remaining_distance_km_approx": 6.763,
+      "note": "Sensitivity bound only; transform not authorized offshore"
+    },
+    {
+      "id": "C123",
+      "original_nearest_polygon_km_approx": 38.77,
+      "worst_case_remaining_distance_km_approx": 38.544,
+      "note": "Sensitivity bound only; transform not authorized offshore"
+    },
+    {
+      "id": "C128",
+      "original_nearest_polygon_km_approx": 73.697,
+      "worst_case_remaining_distance_km_approx": 73.471,
+      "note": "Sensitivity bound only; transform not authorized offshore"
+    },
+    {
+      "id": "C129",
+      "original_nearest_polygon_km_approx": 46.937,
+      "worst_case_remaining_distance_km_approx": 46.711,
+      "note": "Sensitivity bound only; transform not authorized offshore"
+    },
+    {
+      "id": "C131",
+      "original_nearest_polygon_km_approx": 56.124,
+      "worst_case_remaining_distance_km_approx": 55.898,
+      "note": "Sensitivity bound only; transform not authorized offshore"
+    },
+    {
+      "id": "C71",
+      "original_nearest_polygon_km_approx": 25.563,
+      "worst_case_remaining_distance_km_approx": 25.337,
+      "note": "Sensitivity bound only; transform not authorized offshore"
+    }
+  ],
+  "p0_pass": false,
+  "maplibre_activation_allowed": false,
+  "important_caveat": "Onshore-only academic EPSG operations are used solely to test positional sensitivity and are not certified for offshore Hoàng Sa/Trường Sa. The stated accuracy does not apply outside area of use."
+}
