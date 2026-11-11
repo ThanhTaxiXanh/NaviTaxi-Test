@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "scope": "official_province_codes_and_names_only_NOT_geometry",
+  "source_title": "Quyết định số 19/2025/QĐ-TTg, bảng danh mục và mã số đơn vị hành chính Việt Nam",
+  "source_url": "https://baochinhphu.vn/chi-dao-dieu-hanh-cua-chinh-phu-thu-tuong-chinh-phu-ngay-4-7-2025-1-102250704190956567.htm",
+  "effective_from": "2025-07-01",
+  "last_independently_verified_geometries": false,
+  "status": "names_codes_reference_only_not_p0",
+  "p0_pass": false,
+  "units": [
+    {
+      "code": "01",
+      "name": "Hà Nội",
+      "kind": "city"
+    },
+    {
+      "code": "04",
+      "name": "Cao Bằng",
+      "kind": "province"
+    },
+    {
+      "code": "08",
+      "name": "Tuyên Quang",
+      "kind": "province"
+    },
+    {
+      "code": "11",
+      "name": "Điện Biên",
+      "kind": "province"
+    },
+    {
+      "code": "12",
+      "name": "Lai Châu",
+      "kind": "province"
+    },
+    {
+      "code": "14",
+      "name": "Sơn La",
+      "kind": "province"
+    },
+    {
+      "code": "15",
+      "name": "Lào Cai",
+      "kind": "province"
+    },
+    {
+      "code": "19",
+      "name": "Thái Nguyên",
+      "kind": "province"
+    },
+    {
+      "code": "20",
+      "name": "Lạng Sơn",
+      "kind": "province"
+    },
+    {
+      "code": "22",
+      "name": "Quảng Ninh",
+      "kind": "province"
+    },
+    {
+      "code": "24",
+      "name": "Bắc Ninh",
+      "kind": "province"
+    },
+    {
+      "code": "25",
+      "name": "Phú Thọ",
+      "kind": "province"
+    },
+    {
+      "code": "31",
+      "name": "Hải Phòng",
+      "kind": "city"
+    },
+    {
+      "code": "33",
+      "name": "Hưng Yên",
+      "kind": "province"
+    },
+    {
+      "code": "37",
+      "name": "Ninh Bình",
+      "kind": "province"
+    },
+    {
+      "code": "38",
+      "name": "Thanh Hóa",
+      "kind": "province"
+    },
+    {
+      "code": "40",
+      "name": "Nghệ An",
+      "kind": "province"
+    },
+    {
+      "code": "42",
+      "name": "Hà Tĩnh",
+      "kind": "province"
+    },
+    {
+      "code": "44",
+      "name": "Quảng Trị",
+      "kind": "province"
+    },
+    {
+      "code": "46",
+      "name": "Huế",
+      "kind": "city"
+    },
+    {
+      "code": "48",
+      "name": "Đà Nẵng",
+      "kind": "city"
+    },
+    {
+      "code": "51",
+      "name": "Quảng Ngãi",
+      "kind": "province"
+    },
+    {
+      "code": "52",
+      "name": "Gia Lai",
+      "kind": "province"
+    },
+    {
+      "code": "56",
+      "name": "Khánh Hòa",
+      "kind": "province"
+    },
+    {
+      "code": "66",
+      "name": "Đắk Lắk",
+      "kind": "province"
+    },
+    {
+      "code": "68",
+      "name": "Lâm Đồng",
+      "kind": "province"
+    },
+    {
+      "code": "75",
+      "name": "Đồng Nai",
+      "kind": "province"
+    },
+    {
+      "code": "79",
+      "name": "Hồ Chí Minh",
+      "kind": "city"
+    },
+    {
+      "code": "80",
+      "name": "Tây Ninh",
+      "kind": "province"
+    },
+    {
+      "code": "82",
+      "name": "Đồng Tháp",
+      "kind": "province"
+    },
+    {
+      "code": "86",
+      "name": "Vĩnh Long",
+      "kind": "province"
+    },
+    {
+      "code": "91",
+      "name": "An Giang",
+      "kind": "province"
+    },
+    {
+      "code": "92",
+      "name": "Cần Thơ",
+      "kind": "city"
+    },
+    {
+      "code": "96",
+      "name": "Cà Mau",
+      "kind": "province"
+    }
+  ]
+}

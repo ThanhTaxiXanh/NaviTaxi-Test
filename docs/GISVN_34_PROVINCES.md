@@ -27,3 +27,17 @@ Thay `--name-field` bằng tên trường thực tế, ví dụ `TEN_TINH`, nế
 
 Giữ dữ liệu tải về trong thư mục riêng, không commit lên GitHub cho đến khi được cấp phép. Mọi kết quả có `p0_status = BLOCKED` và `maplibre_activation_allowed = false`.
 
+
+## Kiểm tra tên 34 tỉnh/thành với danh mục Chính phủ
+
+Sau bước tiếp nhận GeoJSON, so sánh 34 tên với **Quyết định 19/2025/QĐ-TTg**
+(danh mục/mã cấp tỉnh có hiệu lực từ 01/07/2025):
+
+```bash
+python -m pipeline.province34_intake /path/to/provinces.geojson --name-field name --report audit-output/34provinces-intake.json
+python -m pipeline.province34_name_review audit-output/34provinces-intake.json
+```
+
+Tệp tham chiếu chỉ ghi **34 tên và mã đơn vị**, không chứa ranh giới.
+Kiểm tra này chỉ phát hiện tên sai hoặc lỗi thời, **không chứng minh hình học
+ranh giới, quyền tái sử dụng dữ liệu gis.vn, địa giới biển đảo hay P0 PASS**.
