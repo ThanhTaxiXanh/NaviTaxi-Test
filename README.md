@@ -28,4 +28,4 @@ python3 pipeline/vietnam_sovereignty_validator.py --repo-root .
 
 The last command **must fail** until all required P0 evidence, source provenance and Android screenshots have been approved. A running shell app is **not** completion of P1/P2 or P0.
 
-See [WGS84 feature audit](docs/SPATIAL_AUDIT.md), [MVT payload audit](docs/MVT_TILE_AUDIT.md), [offline intake](docs/OFFLINE_INTAKE.md), [architecture](docs/ARCHITECTURE.md), [data provenance](docs/DATA_PROVENANCE.md), [Android setup](docs/BUILD_ANDROID.md) and the [original Master Prompt](docs/MASTER_PROMPT.txt).
+See [resumable batch audit](docs/BATCH_AUDIT.md), [WGS84 feature audit](docs/SPATIAL_AUDIT.md), [MVT payload audit](docs/MVT_TILE_AUDIT.md), [offline intake](docs/OFFLINE_INTAKE.md), [architecture](docs/ARCHITECTURE.md), [data provenance](docs/DATA_PROVENANCE.md), [Android setup](docs/BUILD_ANDROID.md) and the [original Master Prompt](docs/MASTER_PROMPT.txt).

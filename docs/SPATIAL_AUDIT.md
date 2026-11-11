@@ -123,3 +123,7 @@ All associated source geometry remains quarantined.
 ### Buildings partial chunk smoke test
 
 Two local contiguous Buildings ranges (`[0,1024)` and `[1024,2048)`) were scanned and merged. They cover **2,048/18,890 index entries**, **1,037,382 features**, and **4,350,788 decoded vertices**. The merger explicitly returned `PARTIAL_INDEX_GEOMETRY_DIAGNOSTICS_NOT_P0` with missing index interval `[2048,18890]`. **Do not cite this partial pass as full Buildings coverage.**
+
+## Automated resume and merge
+
+Use [BATCH_AUDIT.md](BATCH_AUDIT.md) to run bounded index-entry scans with atomically saved checkpoints, checksum verification, explicit coverage gaps and automatic safe merging. Unreviewed results are kept in `audit-output/` and excluded from Git by default.

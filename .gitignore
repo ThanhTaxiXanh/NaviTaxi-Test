@@ -29,3 +29,6 @@ android/captures/
 __pycache__/
 *.py[cod]
 .DS_Store
+
+# Transient GIS scan checkpoints / unreviewed feature diagnostics
+audit-output/
