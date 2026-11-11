@@ -9,6 +9,12 @@ on:
       - 'lib/features/map/review_map_data.dart'
       - 'lib/features/map/review_maplibre_screen.dart'
       - 'lib/features/map/review_label_anchors.dart'
+      - 'lib/features/map/admin_catalog.dart'
+      - 'lib/features/map/admin_search_delegate.dart'
+      - 'test/admin_catalog_test.dart'
+      - 'assets/geo/provinces_wards_v5_2.json'
+      - 'pipeline/build_admin_label_anchors.py'
+      - 'pubspec.yaml'
       - 'test/review_label_anchors_test.dart'
       - 'lib/features/map/review_maplibre_style.dart'
       - 'test/review_maplibre_style_test.dart'
@@ -24,6 +30,12 @@ on:
       - 'lib/features/map/review_map_data.dart'
       - 'lib/features/map/review_maplibre_screen.dart'
       - 'lib/features/map/review_label_anchors.dart'
+      - 'lib/features/map/admin_catalog.dart'
+      - 'lib/features/map/admin_search_delegate.dart'
+      - 'test/admin_catalog_test.dart'
+      - 'assets/geo/provinces_wards_v5_2.json'
+      - 'pipeline/build_admin_label_anchors.py'
+      - 'pubspec.yaml'
       - 'test/review_label_anchors_test.dart'
       - 'lib/features/map/review_maplibre_style.dart'
       - 'test/review_maplibre_style_test.dart'
@@ -54,10 +66,24 @@ jobs:
           flutter create --platforms=android --project-name=navi_taxi_test --org=vn.navitaxi .
           rm -f test/widget_test.dart
           flutter pub get
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Derive offline label anchors from pinned GIS archive (review only)
+        run: |
+          python3 -m pip install --quiet shapely==2.1.2
+          curl --fail --location --show-error --silent --retry 3 --retry-all-errors --max-time 300 \
+            --output "$RUNNER_TEMP/vn_provinces_wards_geojson.zip" \
+            "https://raw.githubusercontent.com/thanglequoc/vietnamese-provinces-database/8b78ba5118715e1fa81769286724db79346abf52/json/vn_provinces_wards_geojson.zip"
+          python3 pipeline/build_admin_label_anchors.py \
+            --zip "$RUNNER_TEMP/vn_provinces_wards_geojson.zip" \
+            --names assets/geo/provinces_wards_v5_2.json \
+            --output assets/geo/ward_label_anchors.json \
+            --report build/qa/administrative-labels-review.json
       - name: Verify all Flutter tests and analysis
         run: |
           flutter analyze
-          flutter test
+          flutter test --dart-define=NAVITAXI_ADMIN_ANCHORS_INCLUDED=true
       - name: Build strictly debug REVIEW APK, P0 stays BLOCKED
         run: flutter build apk --debug --dart-define=NAVITAXI_REVIEW_MODE=true
       - name: Package distinct reviewer APK
@@ -71,5 +97,6 @@ jobs:
           path: |
             build/app/outputs/flutter-apk/NaviTaxi_GIS_34Tinh_REVIEW_DEBUG_NOT_P0.apk
             build/app/outputs/flutter-apk/REVIEW_APK_SHA256.txt
+            build/qa/administrative-labels-review.json
           retention-days: 14
           if-no-files-found: error
