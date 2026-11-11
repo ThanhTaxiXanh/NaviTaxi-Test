@@ -31,3 +31,5 @@ The last command **must fail** until all required P0 evidence, source provenance
 See [34-province GIS source intake](docs/GISVN_34_PROVINCES.md), [candidate GIS context](docs/PHYSICAL_CONTEXT_CANDIDATES.md), [full structural scan evidence](docs/FULL_STRUCTURAL_SCAN.md), [resumable batch audit](docs/BATCH_AUDIT.md), [WGS84 feature audit](docs/SPATIAL_AUDIT.md), [MVT payload audit](docs/MVT_TILE_AUDIT.md), [offline intake](docs/OFFLINE_INTAKE.md), [architecture](docs/ARCHITECTURE.md), [data provenance](docs/DATA_PROVENANCE.md), [Android setup](docs/BUILD_ANDROID.md) and the [original Master Prompt](docs/MASTER_PROMPT.txt).
 
 - [Đối chiếu 34 tỉnh: ảnh bản đồ, ZIP gis.vn và repo GitHub](docs/GIS_34_PROVINCES_THREE_SOURCE_QA.md)
+
+- [GeoPackage kiểm định 34 tỉnh](docs/GPKG_PROVINCE34_REVIEW.md). Bản APK có màn hình báo cáo GIS, không đóng gói hoặc hiển thị hình học nguồn chưa phê duyệt.

@@ -5,6 +5,7 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 import '../../core/map_release.dart';
 import '../../core/style_policy.dart';
 import '../offline/offline_packages_screen.dart';
+import '../gis_review/gis_review_screen.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -108,6 +109,18 @@ class _MapScreenState extends State<MapScreen> {
                           ),
                         ),
                       ),
+                      IconButton.filledTonal(
+                        tooltip: 'Kiểm định GIS 34 tỉnh',
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) => const GisReviewScreen(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.fact_check_outlined),
+                      ),
+                      const SizedBox(width: 8),
                       IconButton.filledTonal(
                         tooltip: 'Thông tin bộ nhớ offline',
                         onPressed: () {

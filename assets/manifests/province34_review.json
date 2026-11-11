@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "status": "quarantined_for_offline_review_not_p0",
+  "source": "User-provided 34 GeoJSON province ZIP",
+  "source_zip_sha256": "51779d2585600ec053827a60890ba61cd2192f19b5ee153d38be18a2611d24cd",
+  "source_file_redistributed": false,
+  "review_geopackage_included_in_apk": false,
+  "review_geopackage_sha256": "3f07ed4c8a03e98abefa772fe5afe472cf7f1a97feaff979fe6e424988d5a6ce",
+  "province_features": 34,
+  "offshore_review_components": 315,
+  "geometry_roundtrip_checked": true,
+  "offshore_by_code": [
+    {
+      "code": "48",
+      "name": "Đà Nẵng",
+      "count": 18,
+      "area_over_25_km2": 10
+    },
+    {
+      "code": "56",
+      "name": "Khánh Hòa",
+      "count": 297,
+      "area_over_25_km2": 30
+    }
+  ],
+  "source_license_verified": false,
+  "official_boundary_verified": false,
+  "offshore_land_classification_verified": false,
+  "maplibre_activation_allowed": false,
+  "p0_pass": false,
+  "remaining_checks": [
+    "Xác minh nguồn và giấy phép tái phân phối",
+    "Đối chiếu từng đảo/bãi với tài liệu GIS có thẩm quyền",
+    "Rà soát đa giác hành chính trước khi tô màu đất nổi",
+    "Kiểm thử MapLibre theo mức zoom, ngôn ngữ và chế độ offline"
+  ]
+}
