@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
+import '../offline/offline_mvt_server.dart';
+import '../offline/offline_packages_screen.dart';
+import '../../platform/android_storage_bridge.dart';
 import 'admin_catalog.dart';
 import 'admin_search_delegate.dart';
 import 'review_label_anchors.dart';
@@ -43,7 +48,10 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
   );
   static const double _wardLabelMinZoom = 8.5;
 
-  late final Future<String> _style = _loadStyle();
+  late Future<String> _style;
+  OfflineMvtServer? _tileServer;
+  int _styleRevision = 0;
+  String? _offlineNote;
   List<ReviewLabelAnchor> _regionAnchors = const [];
   AdminCatalog? _catalog;
   List<_ProjectedLabel> _projected = const [];
@@ -52,13 +60,57 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
   bool _projecting = false;
   bool _projectAgain = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _style = _loadStyle();
+  }
+
   Future<String> _loadStyle() async {
     final data = await ReviewMapData.load();
     final catalog = await AdminCatalog.load();
     final style = ReviewMaplibreStyle.build(data);
     _regionAnchors = ReviewLabelAnchors.fromData(data);
     _catalog = catalog;
-    return style;
+
+    // Do not load unverified PMTiles or activate the P0 production style.
+    final previous = _tileServer;
+    _tileServer = null;
+    if (previous != null) await previous.close();
+    try {
+      final paths = await const AndroidStorageBridge()
+          .getVerifiedArchivePathsDebug();
+      final localServer = await OfflineMvtServer.start(paths);
+      _tileServer = localServer;
+      _offlineNote = localServer == null
+          ? 'Chưa có PMTiles được xác thực trên điện thoại.'
+          : 'Đã kết nối ${localServer.sourceCount}/3 lớp PMTiles offline '
+              '(chỉ kiểm thử).';
+      if (localServer == null) return style;
+      return ReviewMaplibreStyle.withOfflineMvt(style, {
+        for (final kind in localServer.enabledKinds)
+          kind: localServer.tileTemplate(kind),
+      });
+    } on Exception catch (error) {
+      // A failed local source cannot make the independent reviewed names
+      // disappear. The GIS reviewer stays available without base tiles.
+      _offlineNote = 'Chưa mở được PMTiles offline: $error';
+      return style;
+    }
+  }
+
+  Future<void> _openOfflinePackages() async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => const OfflinePackagesScreen(),
+      ),
+    );
+    if (!mounted) return;
+    setState(() {
+      _styleRevision++;
+      _projected = const [];
+      _style = _loadStyle();
+    });
   }
 
   Future<void> _search() async {
@@ -183,6 +235,8 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
   @override
   void dispose() {
     _controller = null;
+    final server = _tileServer;
+    if (server != null) unawaited(server.close());
     super.dispose();
   }
 
@@ -241,6 +295,11 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
         title: const Text('NaviTaxi • Bản đồ Việt Nam'),
         actions: [
           IconButton(
+            tooltip: 'Nhập đường, công trình, POI offline',
+            onPressed: _openOfflinePackages,
+            icon: const Icon(Icons.storage_outlined),
+          ),
+          IconButton(
             tooltip: 'Tìm tỉnh, xã, phường',
             onPressed: _search,
             icon: const Icon(Icons.search),
@@ -255,7 +314,8 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
               child: Text('Không đọc được dữ liệu GIS hoặc danh mục địa danh.'),
             );
           }
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState != ConnectionState.done ||
+              !snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
           return Column(
@@ -309,6 +369,7 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
                     children: [
                       Positioned.fill(
                         child: MapLibreMap(
+                          key: ValueKey(_styleRevision),
                           styleString: snapshot.data!,
                           initialCameraPosition: const CameraPosition(
                             target: LatLng(14.5, 110),
@@ -347,9 +408,9 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
                 padding: const EdgeInsets.fromLTRB(12, 5, 12, 10),
                 child: Text(
                   _catalog?.reviewAnchorCount == 3353
-                      ? 'Phóng gần để xem tên xã/phường. '
-                          'Nhãn hiển thị không cần Internet; '
-                          'đường sá và dẫn đường chưa được tích hợp.'
+                      ? 'Tên tỉnh/xã và ba nhãn biển đảo hiển thị offline. '
+                          '${_offlineNote ?? 'Đang kiểm tra PMTiles.'} '
+                          'Chưa có chức năng dẫn đường.'
                       : 'Đã có danh mục 34 tỉnh và 3.321 xã/phường. '
                           'Bản build này chưa có điểm đặt nhãn GIS chi tiết.',
                   textAlign: TextAlign.center,
