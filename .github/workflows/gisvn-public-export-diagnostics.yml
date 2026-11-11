@@ -1,0 +1,24 @@
+name: GIS.vn public export diagnostics
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'pipeline/inspect_gisvn_public_export.py'
+      - '.github/workflows/gisvn-public-export-diagnostics.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-public-export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inspect advertised public GeoJSON export without downloading source
+        run: python -m pipeline.inspect_gisvn_public_export
