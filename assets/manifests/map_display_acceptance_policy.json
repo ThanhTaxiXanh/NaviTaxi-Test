@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "policy_id": "NAVITAXI_VI_TERRITORY_VISUAL_ACCEPTANCE_1",
+  "accepted_precision": "reasonable_display_generalization_with_documented_exceptions",
+  "exact_polygon_match_required": false,
+  "all_point_names_must_be_inside_source_polygon": false,
+  "point_outliers_require_documented_review": true,
+  "mandatory_labels": [
+    "Hoàng Sa",
+    "Trường Sa",
+    "Biển Đông"
+  ],
+  "critical_island_reference_ids": [
+    "B48",
+    "C123",
+    "B15",
+    "B3"
+  ],
+  "allowed_outlier_dispositions": [
+    "generalization_justified",
+    "verified_non_land_feature",
+    "region_label_point",
+    "source_geometry_corrected"
+  ],
+  "mandatory_visuals": [
+    "vietnam-light",
+    "vietnam-dark",
+    "hoang-sa",
+    "truong-sa",
+    "bien-dong",
+    "multi-zoom",
+    "offline-airplane",
+    "online-offline-parity"
+  ],
+  "official_pdf_sha256": "acde9b561eca24312b81efdcb36a22a8fc74e2dcb431f6c206199ef72c98e841",
+  "user_zip_sha256": "51779d2585600ec053827a60890ba61cd2192f19b5ee153d38be18a2611d24cd",
+  "reviewed_point_count": 183,
+  "no_unauthorized_maritime_lines": true,
+  "no_unapproved_foreign_admin_labels": true,
+  "use_rights_required": true,
+  "road_navigation_sign_and_speed_gate_separate": true,
+  "status": "POLICY_ONLY_NOT_P0",
+  "p0_pass": false,
+  "maplibre_activation_allowed": false
+}

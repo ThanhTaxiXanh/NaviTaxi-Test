@@ -35,3 +35,5 @@ See [34-province GIS source intake](docs/GISVN_34_PROVINCES.md), [candidate GIS 
 - [GeoPackage kiểm định 34 tỉnh](docs/GPKG_PROVINCE34_REVIEW.md). Bản APK có màn hình báo cáo GIS, không đóng gói hoặc hiển thị hình học nguồn chưa phê duyệt.
 
 - [Đối chiếu toàn bộ 183 địa danh biển đảo với Thông tư 33/2024/TT-BTNMT](docs/TT33_OFFICIAL_183_GIS_QA.md), chỉ kiểm tra điểm và khoảng cách, không xác minh đường bao pháp lý.
+
+- [Tiêu chí nghiệm thu lãnh thổ tương đối cho bản đồ dẫn đường](docs/MAP_DISPLAY_ACCEPTANCE.md): không yêu cầu trùng 100% polygon; biển báo và giới hạn tốc độ có chốt kiểm thử riêng.
