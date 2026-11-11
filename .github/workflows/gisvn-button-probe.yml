@@ -1,11 +1,6 @@
 name: GIS.vn official public GeoJSON button probe
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'pipeline/inspect_gisvn_browser_export.py'
-      - '.github/workflows/gisvn-button-probe.yml'
   workflow_dispatch:
 
 permissions:

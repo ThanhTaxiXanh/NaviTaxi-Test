@@ -1,10 +1,10 @@
 # Tiếp nhận dữ liệu 34 tỉnh/thành vào NaviTaxi (ứng viên gis.vn)
 
-**Trạng thái: chờ tệp từ nhà cung cấp, không được tự phê duyệt.** Môi trường này không thể mở `gis.vn` hoặc xác minh được trang có link tải, phiên bản, quyền tái sử dụng dữ liệu hay không. Không được coi tên miền là chứng cứ dữ liệu chính thức.
+**Trạng thái: chờ GeoJSON gốc từ nhà cung cấp, không được tự phê duyệt.** Ngày 11/11/2026 đã truy cập được trang công khai `https://gis.vn/don-vi-hanh-chinh-viet-nam` bằng trình đọc HTML và trình duyệt CI. Trang có nút GeoJSON rõ ràng cho **Việt Nam (tỉnh thành) - 34**. Tuy nhiên, không có liên kết tải trực tiếp trong HTML; trình duyệt chưa lấy được tệp nguồn do nút không hiển thị tại trạng thái trang mặc định. Chưa tìm thấy quyền tái sử dụng hoặc công bố phiên bản đủ để xác minh. Không được coi tên miền hay việc có nút tải là chứng cứ bản đồ chính thức.
 
 ## Bước nhập dữ liệu
 
-1. Trên trình duyệt, kiểm tra rõ nhà phát hành, ngày công bố, phiên bản địa giới, nguồn GIS, phương thức cấp phép và khả năng sử dụng offline/redistribute; tải tệp bằng chức năng công khai hoặc giấy phép hợp lệ. Không lấy trộm tile hoặc vượt cơ chế bảo vệ.
+1. Mở https://gis.vn/don-vi-hanh-chinh-viet-nam, chọn **sau sáp nhập / 34 tỉnh**, ở dòng **Việt Nam (tỉnh thành) - 34** chọn **GeoJSON**. Không chọn bộ phường/xã 34 hoặc tỉnh/thành 63. Nếu giao diện yêu cầu đăng nhập, chỉ dùng tài khoản của bạn; không chia sẻ thông tin đăng nhập. Trên trình duyệt, kiểm tra rõ nhà phát hành, ngày công bố, phiên bản địa giới, nguồn GIS, phương thức cấp phép và khả năng sử dụng offline/redistribute; tải tệp bằng chức năng công khai hoặc giấy phép hợp lệ. Không lấy trộm tile hoặc vượt cơ chế bảo vệ.
 2. Ưu tiên GeoPackage (.gpkg) hoặc GeoJSON (.geojson). Nếu chỉ có SHP, phải có đủ .shp, .dbf, .shx, .prj; có thể chuyển bằng GDAL. Không suy đoán CRS nếu thiếu .prj.
 3. Chuyển bản sao làm việc sang GeoJSON lon/lat WGS84 (EPSG:4326), ví dụ:
 
@@ -41,3 +41,11 @@ python -m pipeline.province34_name_review audit-output/34provinces-intake.json
 Tệp tham chiếu chỉ ghi **34 tên và mã đơn vị**, không chứa ranh giới.
 Kiểm tra này chỉ phát hiện tên sai hoặc lỗi thời, **không chứng minh hình học
 ranh giới, quyền tái sử dụng dữ liệu gis.vn, địa giới biển đảo hay P0 PASS**.
+
+## Biên bản thử tải trực tiếp ngày 11/11/2026
+
+- HTML của gis.vn trả về HTTP 200. Nút xuất 34 tỉnh gọi hàm public `taigeojson_tong_tuheader_SAUSAPNHAP('TONG_VN_TINHTHANH', ...)`.
+- Trình duyệt Chromium tự động trên GitHub Actions mở đúng trang, thấy tên trang và 1 nút GeoJSON cấp tỉnh. Tuy nhiên nút có trạng thái `visible=false`, giao diện hiển thị `Chưa đăng nhập` và không có sự kiện tải trong phiên này. Không có tệp GeoJSON tải thành công.
+- Workflow `GIS.vn official public GeoJSON button probe` chỉ lưu `inspection.json`, **không lưu hoặc công bố dữ liệu chưa rõ quyền tái sử dụng**.
+- Danh mục 34 tỉnh được đối chiếu bằng **tên và mã** theo Quyết định 19/2025/QĐ-TTg (nguồn: https://baochinhphu.vn/chi-dao-dieu-hanh-cua-chinh-phu-thu-tuong-chinh-phu-ngay-4-7-2025-1-102250704190956567.htm). Đây chỉ là kiểm tra tên và mã, không thay thế ranh giới GIS chính thức.
+- Do chưa có tệp tải và chưa xác minh điều khoản cấp phép, **không đưa GeoJSON vào tài sản Flutter và không bật MapLibre**.
