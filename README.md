@@ -39,3 +39,5 @@ See [34-province GIS source intake](docs/GISVN_34_PROVINCES.md), [candidate GIS 
 - [Tiêu chí nghiệm thu lãnh thổ tương đối cho bản đồ dẫn đường](docs/MAP_DISPLAY_ACCEPTANCE.md): không yêu cầu trùng 100% polygon; biển báo và giới hạn tốc độ có chốt kiểm thử riêng.
 
 - [Giải trình 14 địa danh biển đảo bằng điểm nguồn chính thức và kiểm tra độc lập](docs/ISLAND_OUTLIER_RESOLUTION.md), chưa chứng nhận đường bao đất nổi.
+
+- [Fail-closed P0 binding at Flutter runtime](docs/P0_RUNTIME_ACTIVATION.md): editing JSON or layer IDs alone cannot turn on unapproved tile sources.
