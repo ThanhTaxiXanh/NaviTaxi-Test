@@ -1,0 +1,59 @@
+name: Android MapLibre safe fallback screenshots - NOT P0
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/qa/android_safe_basemap_screenshots.sh'
+      - 'pipeline/package_android_visual_qa.py'
+      - '.github/workflows/p0-safe-fallback-android.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android-emulator-p0-safe-fallback:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Prepare Flutter Android project
+        run: |
+          flutter create --platforms=android --project-name=navi_taxi_test --org=vn.navitaxi .
+          rm -f test/widget_test.dart
+          flutter pub get
+          flutter build apk --debug
+      - name: Enable Linux KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Boot emulator and capture real fallback MapLibre surface
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_4
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: bash tools/qa/android_safe_basemap_screenshots.sh
+      - name: Summarize PNG and APK checksums without P0 approval
+        run: python -m pipeline.package_android_visual_qa
+      - name: Save non-release screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: navitaxi-android-p0-safe-fallback-screenshots-NOT-APPROVED
+          path: build/qa/p0-safe-fallback/
+          if-no-files-found: warn
+          retention-days: 7
