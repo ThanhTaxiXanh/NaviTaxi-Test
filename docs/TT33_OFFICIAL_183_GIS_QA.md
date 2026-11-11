@@ -57,3 +57,7 @@ python -m pipeline.verify_official_island_points '/path/to/GeoJSON 34 Tinh VN.zi
 Đầu ra chứa tên và tọa độ điểm công bố cùng khoảng cách tới GeoJSON của người dùng. **Không thay đổi nguồn MapLibre hay `assets/geo/approved_reference.json`; P0 vẫn BLOCKED.**
 
 Người dùng nhận kèm riêng bảng CSV/JSON chi tiết và hai sơ đồ vị trí để mở trong QGIS. Git chỉ lưu metadata, không phân phối lại ZIP GeoJSON người dùng hoặc hình học vector bên thứ ba.
+
+## Nguồn vector địa giới hành chính có thẩm quyền
+
+Có [bản hướng dẫn kiểm tra quyền truy cập WFS, nguồn hình học 34 tỉnh và các bằng chứng cần xin](OFFICIAL_BOUNDARY_SOURCE_ACCESS.md). API chỉ được dùng khi có quyền và xác nhận phiên bản địa giới mới; bản đồ xem được không tự cấp quyền phân phối vector.
