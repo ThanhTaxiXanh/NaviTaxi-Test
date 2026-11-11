@@ -68,12 +68,28 @@ class _ReviewMaplibreScreenState extends State<ReviewMaplibreScreen> {
       context: context,
       delegate: AdminSearchDelegate(catalog),
     );
-    if (result != null && result.hasAnchor && mounted) {
+    if (result == null || !mounted) return;
+    if (result.hasAnchor) {
       await _move(
         result.latitude!,
         result.longitude!,
         result.isProvince ? 8.0 : 11.0,
       );
+      return;
+    }
+    final groupName = switch (result.code) {
+      '20333' => 'Hoàng Sa',
+      '22736' => 'Trường Sa',
+      _ => null,
+    };
+    if (groupName != null) {
+      // Existing reviewed group-label anchors, never fabricated ward GPS.
+      for (final anchor in _regionAnchors) {
+        if (anchor.name == groupName) {
+          await _move(anchor.latitude, anchor.longitude, 6.0);
+          break;
+        }
+      }
     }
   }
 
