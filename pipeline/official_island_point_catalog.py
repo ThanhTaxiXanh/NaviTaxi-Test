@@ -15,7 +15,7 @@ import tempfile
 import urllib.request
 import zlib
 
-SOURCE = "https://www.mae.gov.vn/noidung/Lists/VBQPPL/Attachments/514/1_DanhMuc_TT_DiaDanh_BanHanh.pdf"
+SOURCE = "https://mae.gov.vn/noidung/Lists/VBQPPL/Attachments/514/1_DanhMuc_TT_DiaDanh_BanHanh.pdf"
 DMS = re.compile(r"(\d{1,3})\s*[°º]\s*(\d{1,2})\s*['’′]\s*(\d{1,2})")
 PROVINCES = {"B": ("Đà Nẵng", 50), "C": ("Khánh Hòa", 133)}
 
