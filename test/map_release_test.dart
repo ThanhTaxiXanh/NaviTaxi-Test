@@ -63,7 +63,7 @@ void main() {
         'layout': {'text-field': entry.value, 'visibility': 'visible'},
         'minzoom': 3,
       };
-    }).toList(growable: false);
+    }).toList();
   }
 
   test('empty basemap style cannot pass structural review', () {
