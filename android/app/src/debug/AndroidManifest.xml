@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- DEBUG ONLY: native MapLibre may read tokenized 127.0.0.1 tile URLs.
+         Production AndroidManifest is unchanged. No external cleartext
+         basemap source is added by this project. -->
+    <application android:usesCleartextTraffic="true" />
+</manifest>
