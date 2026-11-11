@@ -6,6 +6,8 @@ on:
     paths:
       - 'pipeline/official_island_point_catalog.py'
       - 'tests/sovereignty/test_official_island_point_catalog.py'
+      - 'pipeline/verify_official_island_points.py'
+      - 'tests/sovereignty/test_verify_official_island_points.py'
       - '.github/workflows/official-island-reference-qa.yml'
   workflow_dispatch:
 
@@ -23,8 +25,10 @@ jobs:
           python-version: '3.12'
       - name: Install pdf text tools
         run: sudo apt-get update -qq && sudo apt-get install -y poppler-utils
+      - name: Verify point-reference fail-closed schema
+        run: python -m unittest tests.sovereignty.test_verify_official_island_points -v
       - name: Extract all official B/C island reference coordinates
-        run: python -m pipeline.official_island_point_catalog --download
+        run: python -m pipeline.official_island_point_catalog --download --points-output build/official-points/official-points-private.json
       - name: Upload source checksum and reference metadata only
         uses: actions/upload-artifact@v4
         with:

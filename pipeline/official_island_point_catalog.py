@@ -72,6 +72,7 @@ def main():
     parser.add_argument("--pdf", type=Path)
     parser.add_argument("--download", action="store_true")
     parser.add_argument("--output", type=Path, default=Path("build/official-points/qa.json"))
+    parser.add_argument("--points-output", type=Path, help="Local full point list for GIS screening, never a boundary layer")
     args = parser.parse_args()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     if args.download:
@@ -98,6 +99,26 @@ def main():
         "count": len(data),
     }
     args.output.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
+    if args.points_output:
+        # Full official POINT catalog, stored locally outside Git/assets.
+        points_document = {
+            "schema_version": 1,
+            "source_url": SOURCE,
+            "source_pdf_sha256": record["pdf_sha256"],
+            "source_datum": "VN-2000",
+            "points": [
+                {"id": f"{section}{index}", "section": section, "number": index,
+                 "name": name, "lat_seconds": lat_sec, "lon_seconds": lon_sec}
+                for section, index, name, lat_sec, lon_sec in data
+            ],
+            "geometry_type": "reference_points_not_boundary_polygons",
+            "p0_pass": False,
+        }
+        args.points_output.parent.mkdir(parents=True, exist_ok=True)
+        args.points_output.write_text(
+            json.dumps(points_document, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
     encoded = base64.b64encode(
         zlib.compress(json.dumps(data, ensure_ascii=False, separators=(",",":")).encode("utf-8"), 9)
     ).decode("ascii")
