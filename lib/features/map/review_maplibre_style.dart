@@ -144,7 +144,9 @@ class ReviewMaplibreStyle {
         {
           'id': 'review-province-names', 'type': 'symbol',
           'source': 'review-provinces', 'minzoom': 5,
+          // Province names are Flutter overlays in the GIS reviewer too.
           'layout': {
+            'visibility': 'none',
             'text-field': ['get', 'name'], 'text-size': 11,
             'text-font': ['Noto Sans Regular'],
           },
