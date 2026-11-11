@@ -96,8 +96,8 @@ class OfflinePackageStore(private val activity: FlutterActivity) {
             }
             "getVerifiedArchivePathsDebug" -> {
                 // Never grant local tile access to a non-debug APK.
-                val debugBuild = activity.applicationInfo.flags and
-                    android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE != 0
+                val debugBuild = (activity.applicationInfo.flags and
+                    android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
                 if (!debugBuild) {
                     result.error("DEBUG_ONLY", "PMTiles review is not available in release builds", null)
                     return
