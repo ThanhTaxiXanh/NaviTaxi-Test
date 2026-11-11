@@ -257,6 +257,37 @@ def validate_release(repo_root: Path) -> list[Finding]:
     errors.extend(validate_reference(reference))
     errors.extend(validate_style(style))
 
+    # The original three PMTiles are verified mainland-only. A positive
+    # structural MVT scan must not be mistaken for archipelago label coverage.
+    # A future island/sea tile package must provide a NEW reviewed P0 artifact,
+    # not merely change the status flag in this historical diagnostic.
+    gap_report = (
+        repo_root /
+        "docs/audits/2026-11-11-mainland-pmtiles-offshore-coverage.json"
+    )
+    try:
+        gap = json.loads(gap_report.read_text(encoding="utf-8"))
+        if (
+            gap.get("p0_pass") is not False or
+            gap.get("official_island_name_reference_points") != 183 or
+            gap.get("source_archive_count") != 3 or
+            gap.get("source_bbox_coverage_count") != 0 or
+            gap.get("uncovered_reference_point_count") != 183 or
+            gap.get("source_semantic_feature_coverage_verified") is not False
+        ):
+            errors.append(Finding(
+                "OFFSHORE_COVERAGE_AUDIT_INVALID",
+                "Mainland source coverage diagnostic is missing or altered"
+            ))
+        else:
+            errors.append(Finding(
+                "OFFSHORE_TILE_SOURCE_REQUIRED",
+                "Existing HOTOSM PMTiles cover none of the 183 island-name "
+                "reference points; a separately reviewed offshore source is needed"
+            ))
+    except (OSError, ValueError) as exc:
+        errors.append(Finding("OFFSHORE_COVERAGE_AUDIT_MISSING", str(exc)))
+
     evidence = manifest.get("evidence", {})
     if not isinstance(evidence, dict):
         evidence = {}

@@ -120,6 +120,7 @@ class SovereigntyP0Tests(unittest.TestCase):
         self.assertIn("RELEASE_BLOCKED", codes)
         self.assertIn("FULL_P0_ENGINE_INCOMPLETE", codes)
         self.assertIn("VISUAL_NOT_APPROVED", codes)
+        self.assertIn("OFFSHORE_TILE_SOURCE_REQUIRED", codes)
 
 
 if __name__ == "__main__":
