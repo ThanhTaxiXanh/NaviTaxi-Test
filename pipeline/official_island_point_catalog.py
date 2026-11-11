@@ -21,12 +21,20 @@ PROVINCES = {"B": ("Đà Nẵng", 50), "C": ("Khánh Hòa", 133)}
 
 
 def extract_points(pdf_path: Path):
+    # Invalid files fail as data errors even if pdftotext is not installed in
+    # the lightweight Python preflight runner.
+    with pdf_path.open("rb") as source:
+        if source.read(5) != b"%PDF-":
+            raise ValueError("Not a PDF input")
     with tempfile.TemporaryDirectory() as temp:
         text_path = Path(temp) / "source.txt"
-        result = subprocess.run(
-            ["pdftotext", "-layout", "-nopgbrk", str(pdf_path), str(text_path)],
-            text=True, capture_output=True,
-        )
+        try:
+            result = subprocess.run(
+                ["pdftotext", "-layout", "-nopgbrk", str(pdf_path), str(text_path)],
+                text=True, capture_output=True,
+            )
+        except FileNotFoundError as exc:
+            raise ValueError("pdftotext is required for official PDF extraction") from exc
         if result.returncode:
             raise ValueError("PDF text extraction failed: " + result.stderr[:200])
         text = text_path.read_text(encoding="utf-8")
