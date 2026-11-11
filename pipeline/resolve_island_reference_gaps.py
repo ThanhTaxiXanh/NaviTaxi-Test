@@ -51,7 +51,7 @@ def classify_name(name: str) -> str:
 
 
 def validate_anchor_catalog(catalog: dict, reference: dict | None = None) -> dict:
-    from pyproj import Geod
+    import math
     if (catalog.get("schema_version") != 1
             or catalog.get("p0_pass") is not False
             or catalog.get("maplibre_activation_allowed") is not False
@@ -68,7 +68,6 @@ def validate_anchor_catalog(catalog: dict, reference: dict | None = None) -> dic
         "B48", "B15", "B3", "C123"
     }:
         raise ValueError("Unexpected island reference IDs")
-    geod = Geod(ellps="WGS84")
     checked = {}
     for entry in entries:
         a, b = entry.get("published_vn2000", []), entry.get("independent_position", [])
@@ -77,7 +76,13 @@ def validate_anchor_catalog(catalog: dict, reference: dict | None = None) -> dic
                 and isinstance(entry.get("url"), str)
                 and entry["url"].startswith("https://")):
             raise ValueError("Incomplete corroborating coordinate")
-        distance = geod.inv(a[0], a[1], b[0], b[1])[2] / 1000
+        # Haversine is sufficient for the independent ~1 km point screen;
+        # polygon boundary distances below use a local metric projection.
+        lon1, lat1, lon2, lat2 = map(math.radians, (a[0], a[1], b[0], b[1]))
+        h = math.sin((lat2-lat1)/2)**2 + (
+            math.cos(lat1)*math.cos(lat2)*math.sin((lon2-lon1)/2)**2
+        )
+        distance = 2 * 6371.0088 * math.asin(min(1., math.sqrt(h)))
         if distance > catalog.get("tolerance_km_for_independent_point_screen", 1):
             raise ValueError("Large discrepancy in named-island corroboration")
         checked[entry["reference_id"]] = round(distance, 3)
