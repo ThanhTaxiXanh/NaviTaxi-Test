@@ -1,0 +1,35 @@
+name: GIS.vn official public GeoJSON button probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'pipeline/inspect_gisvn_browser_export.py'
+      - '.github/workflows/gisvn-button-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-geojson-export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install official browser automation dependency
+        run: |
+          pip install playwright==1.58.0
+          python -m playwright install --with-deps chromium
+      - name: Click public 34-province GeoJSON button without credentials
+        run: python -m pipeline.inspect_gisvn_browser_export
+      - name: Save source/provenance diagnostics only, no unlicensed files
+        uses: actions/upload-artifact@v4
+        with:
+          name: gisvn-34-province-download-diagnostics-NOT-P0
+          path: build/gisvn_public_export/inspection.json
+          if-no-files-found: error
+          retention-days: 7
