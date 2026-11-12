@@ -1,0 +1,43 @@
+name: Publish offline v2 debug APK
+on:
+  push:
+    branches: [downloads/offline-v2]
+    paths: [release-manifest.json, .github/workflows/publish-apk.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reassemble and verify APK
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          m=json.loads(Path('release-manifest.json').read_text())
+          root=Path('release');root.mkdir()
+          output=root/m['file'];h=hashlib.sha256();total=0
+          with output.open('wb') as f:
+              for part in m['parts']:
+                  b=Path(part['file']).read_bytes()
+                  assert len(b)==part['bytes']
+                  assert hashlib.sha256(b).hexdigest()==part['sha256']
+                  f.write(b);h.update(b);total+=len(b)
+          assert total==m['bytes'] and h.hexdigest()==m['sha256']
+          (root/'SHA256SUMS.txt').write_text(m['sha256']+'  '+m['file']+'\n')
+          PY
+      - name: Publish downloadable debug APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if gh release view offline-v2-debug >/dev/null 2>&1; then
+            gh release upload offline-v2-debug release/*.apk release/SHA256SUMS.txt --clobber
+          else
+            gh release create offline-v2-debug release/*.apk release/SHA256SUMS.txt \
+              --target "$GITHUB_SHA" --prerelease \
+              --title "NaviTaxi offline v2 — APK debug" \
+              --notes-file RELEASE_NOTES.md
+          fi

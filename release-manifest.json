@@ -1,0 +1,43 @@
+{
+  "file": "NaviTaxi-offline-v2-debug.apk",
+  "bytes": 206187877,
+  "sha256": "93b3b1003115e50c4380ae204c7a089103125e3752f8815d9255aa161f2799d2",
+  "source_commit": "c17f4c4",
+  "parts": [
+    {
+      "file": "parts/apk.00.part",
+      "bytes": 33554432,
+      "sha256": "01e7095c79814a1a0cda220741d0d88f165ac9ed342b1e3fc3c3a9d2442b4a76"
+    },
+    {
+      "file": "parts/apk.01.part",
+      "bytes": 33554432,
+      "sha256": "c89409f5d8482b579ed738ac7a5040c47e2654587824f9dea3a93c464c5ac766"
+    },
+    {
+      "file": "parts/apk.02.part",
+      "bytes": 33554432,
+      "sha256": "387b9804d42de2c403cb305def12c816468ef203de5c6389d0d63aa386cea07e"
+    },
+    {
+      "file": "parts/apk.03.part",
+      "bytes": 33554432,
+      "sha256": "dcf6eb59a817ab2353e84efbf5b0bff2d4a363273ed0d873478c5cd93c4b0750"
+    },
+    {
+      "file": "parts/apk.04.part",
+      "bytes": 33554432,
+      "sha256": "552a2cb399d01232b046a3e8e99be9ba1a62473111eba00273598bb0a792c622"
+    },
+    {
+      "file": "parts/apk.05.part",
+      "bytes": 33554432,
+      "sha256": "fca163da9054f0d890b6ed69bfd93b1f3dac7552dad7abb25063e18ce5224e65"
+    },
+    {
+      "file": "parts/apk.06.part",
+      "bytes": 4861285,
+      "sha256": "b249f2426539e45258528fbd33214458029c9158e087604b3714458ed6b81c4c"
+    }
+  ]
+}
